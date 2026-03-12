@@ -1,12 +1,8 @@
-# MedQ
+![banner.jpg](/public/banner.jpg)
 
-> Virtual queue management for university campus clinics.
+Students join the clinic queue from their phone or laptop — no more sitting in waiting rooms guessing how long is left. Staff manage the queue from a single panel.
 
-Students join the clinic queue from their phone or laptop — no more sitting in waiting rooms guessing how long is left. Staff manage the queue from a single panel. 
-
-![MedQ](https://img.shields.io/badge/status-in%20development-yellow?style=flat-square) ![TypeScript](https://img.shields.io/badge/TypeScript-5.x-3178c6?style=flat-square&logo=typescript&logoColor=white) ![React](https://img.shields.io/badge/React-18-61dafb?style=flat-square&logo=react&logoColor=black) ![Express](https://img.shields.io/badge/Express-4.x-000000?style=flat-square&logo=express) ![SQLite](https://img.shields.io/badge/SQLite-better--sqlite3-003b57?style=flat-square&logo=sqlite)
-
----
+<p align="center"><img src="https://ziadoua.github.io/m3-Markdown-Badges/badges/ViteJS/vitejs2.svg"><img src="https://ziadoua.github.io/m3-Markdown-Badges/badges/Express/express2.svg"><img src="https://ziadoua.github.io/m3-Markdown-Badges/badges/SQLite/sqlite2.svg"><img src="https://ziadoua.github.io/m3-Markdown-Badges/badges/SQLite/sqlite2.svg"></p>
 
 ## Features
 
@@ -19,12 +15,12 @@ Students join the clinic queue from their phone or laptop — no more sitting in
 
 ## Tech Stack
 
-| Layer | Tech |
-|-------|------|
+| Layer    | Tech                               |
+| -------- | ---------------------------------- |
 | Frontend | Vite + React 19 + TypeScript (SWC) |
-| Styling | Tailwind CSS + Shadcn/ui |
-| Backend | Express.js + TypeScript |
-| Database | SQLite via better-sqlite3 |
+| Styling  | Tailwind CSS + Shadcn/ui           |
+| Backend  | Express.js + TypeScript            |
+| Database | SQLite via better-sqlite3          |
 
 ---
 
@@ -120,13 +116,13 @@ medq/
 
 ## API Reference
 
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| GET | `/api/queue` | Fetch current queue with estimated waits |
-| POST | `/api/queue` | Join the queue |
-| PATCH | `/api/queue/:id` | Update patient status (`called`, `seen`, `skipped`) |
-| DELETE | `/api/queue/:id` | Remove patient from queue |
-| GET | `/api/stats` | Today's session stats |
+| Method | Endpoint         | Description                                         |
+| ------ | ---------------- | --------------------------------------------------- |
+| GET    | `/api/queue`     | Fetch current queue with estimated waits            |
+| POST   | `/api/queue`     | Join the queue                                      |
+| PATCH  | `/api/queue/:id` | Update patient status (`called`, `seen`, `skipped`) |
+| DELETE | `/api/queue/:id` | Remove patient from queue                           |
+| GET    | `/api/stats`     | Today's session stats                               |
 
 ---
 
@@ -142,15 +138,15 @@ Built as a group project for the University of Colombo School of Computing. The 
 
 ## Contributors
 
-| Name | GitHub |
-|------|--------|
-| Sandina | [@SandinaRajapaksha](https://github.com/SandinaRajapaksha) |
-| Thulana Gunasekara | [@thul-oshadith](https://github.com/thul-oshadith) |
-| Ravindu Liyanage | [@ravmax-rdl](https://github.com/ravmax-rdl) |
-| Ivishan Rathnayake | [@IvishanR](https://github.com/IvishanR) |
-| Nesitha | [@Nesithasawanjith](https://github.com/Nesithasawanjith) |
+| Name                | GitHub                                                           |
+| ------------------- | ---------------------------------------------------------------- |
+| Sandina             | [@SandinaRajapaksha](https://github.com/SandinaRajapaksha)       |
+| Thulana Gunasekara  | [@thul-oshadith](https://github.com/thul-oshadith)               |
+| Ravindu Liyanage    | [@ravmax-rdl](https://github.com/ravmax-rdl)                     |
+| Ivishan Rathnayake  | [@IvishanR](https://github.com/IvishanR)                         |
+| Nesitha             | [@Nesithasawanjith](https://github.com/Nesithasawanjith)         |
 | Chathuri Rajapaksha | [@cnayanathara3-source](https://github.com/cnayanathara3-source) |
-| Dinithi | [@DiniRathnayake05](https://github.com/DiniRathnayake05) |
-| Nethmi Imasha | [@nethmiimasha18](https://github.com/nethmiimasha18) |
-| Niduka Akalanka | [@npaw2005](https://github.com/npaw2005) |
-| Chaniru | [@chanirurandiv37-dev](https://github.com/chanirurandiv37-dev) |
+| Dinithi             | [@DiniRathnayake05](https://github.com/DiniRathnayake05)         |
+| Nethmi Imasha       | [@nethmiimasha18](https://github.com/nethmiimasha18)             |
+| Niduka Akalanka     | [@npaw2005](https://github.com/npaw2005)                         |
+| Chaniru             | [@chanirurandiv37-dev](https://github.com/chanirurandiv37-dev)   |
