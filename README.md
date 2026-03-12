@@ -2,7 +2,7 @@
 
 Students join the clinic queue from their phone or laptop — no more sitting in waiting rooms guessing how long is left. Staff manage the queue from a single panel.
 
-<p align="center"><img src="https://ziadoua.github.io/m3-Markdown-Badges/badges/ViteJS/vitejs2.svg"><img src="https://ziadoua.github.io/m3-Markdown-Badges/badges/Express/express2.svg"><img src="https://ziadoua.github.io/m3-Markdown-Badges/badges/SQLite/sqlite2.svg"><img src="https://ziadoua.github.io/m3-Markdown-Badges/badges/SQLite/sqlite2.svg"></p>
+<p align="center" ><img height="20px" src="https://ziadoua.github.io/m3-Markdown-Badges/badges/ViteJS/vitejs2.svg"> <img height="20px" src="https://ziadoua.github.io/m3-Markdown-Badges/badges/Express/express2.svg"> <img height="20px" src="https://ziadoua.github.io/m3-Markdown-Badges/badges/SQLite/sqlite2.svg"></p>
 
 ## Features
 
@@ -88,28 +88,14 @@ The SQLite database (`server/clinic.db`) is created automatically on first serve
 
 ```
 medq/
+├── public/
 ├── src/                        # Frontend — Vite + React
 │   ├── components/
-│   │   ├── QueueBoard.tsx
-│   │   ├── QueueForm.tsx
-│   │   ├── StaffPanel.tsx
-│   │   └── WaitEstimate.tsx
-│   ├── hooks/
-│   │   └── useQueue.ts
+│   │   └── ui/                 # Shadcn/ui components
 │   ├── lib/
-│   │   └── api.ts
-│   └── App.tsx
-├── index.html
-├── package.json
-└── server/                     # Backend — Express + SQLite
-    ├── routes/
-    │   ├── queue.ts
-    │   ├── manage.ts
-    │   └── stats.ts
-    ├── db.ts
-    ├── index.ts
-    ├── clinic.db               # Auto-generated, gitignored
-    └── package.json
+│   ├── staff/                  # Staff view (WIP)
+│   ├── student/                # Student view (WIP)
+├── server/                     # Backend — Express + SQLite (WIP)
 ```
 
 ---
