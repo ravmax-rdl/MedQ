@@ -1,73 +1,156 @@
-# React + TypeScript + Vite
+# MedQ
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+> Virtual queue management for university campus clinics.
 
-Currently, two official plugins are available:
+Students join the clinic queue from their phone or laptop — no more sitting in waiting rooms guessing how long is left. Staff manage the queue from a single panel. 
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+![MedQ](https://img.shields.io/badge/status-in%20development-yellow?style=flat-square) ![TypeScript](https://img.shields.io/badge/TypeScript-5.x-3178c6?style=flat-square&logo=typescript&logoColor=white) ![React](https://img.shields.io/badge/React-18-61dafb?style=flat-square&logo=react&logoColor=black) ![Express](https://img.shields.io/badge/Express-4.x-000000?style=flat-square&logo=express) ![SQLite](https://img.shields.io/badge/SQLite-better--sqlite3-003b57?style=flat-square&logo=sqlite)
 
-## React Compiler
+---
 
-The React Compiler is currently not compatible with SWC. See [this issue](https://github.com/vitejs/vite-plugin-react/issues/428) for tracking the progress.
+## Features
 
-## Expanding the ESLint configuration
+- **Student view** — join queue, see live position and estimated wait time
+- **Staff view** — call next patient, mark seen, skip, remove no-shows
+- **Live updates** — queue refreshes every 2 seconds, no page reload needed
+- **Wait estimates** — computed from rolling average of completed sessions
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+---
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+## Tech Stack
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+| Layer | Tech |
+|-------|------|
+| Frontend | Vite + React 19 + TypeScript (SWC) |
+| Styling | Tailwind CSS + Shadcn/ui |
+| Backend | Express.js + TypeScript |
+| Database | SQLite via better-sqlite3 |
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+---
+
+## Getting Started
+
+### Prerequisites
+
+- Node.js 18+
+- pnpm 9+
+
+```bash
+# Install pnpm if you don't have it
+npm install -g pnpm
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+### Install
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+```bash
+git clone https://github.com/your-username/medq.git
+cd medq
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+# Install frontend dependencies
+pnpm install
+
+# Install backend dependencies
+cd server && pnpm install
 ```
+
+### Run
+
+Open two terminals:
+
+```bash
+# Terminal 1 — API server (http://localhost:3001)
+cd medq/server
+pnpm dev
+
+# Terminal 2 — React app (http://localhost:5173)
+cd medq
+pnpm dev
+```
+
+The SQLite database (`server/clinic.db`) is created automatically on first server start.
+
+---
+
+## Usage
+
+### Students
+
+1. Open `http://localhost:5173/student`
+2. Enter your name, student ID, and reason for visit
+3. See your live queue position and estimated wait time
+4. You'll be alerted on screen when you're called
+
+### Staff
+
+1. Navigate to `http://localhost:5173/staff`
+2. Enter the staff password: `clinic2025`
+3. Use the queue panel to call, mark seen, or skip patients
+
+---
+
+## Project Structure
+
+```
+medq/
+├── src/                        # Frontend — Vite + React
+│   ├── components/
+│   │   ├── QueueBoard.tsx
+│   │   ├── QueueForm.tsx
+│   │   ├── StaffPanel.tsx
+│   │   └── WaitEstimate.tsx
+│   ├── hooks/
+│   │   └── useQueue.ts
+│   ├── lib/
+│   │   └── api.ts
+│   └── App.tsx
+├── index.html
+├── package.json
+└── server/                     # Backend — Express + SQLite
+    ├── routes/
+    │   ├── queue.ts
+    │   ├── manage.ts
+    │   └── stats.ts
+    ├── db.ts
+    ├── index.ts
+    ├── clinic.db               # Auto-generated, gitignored
+    └── package.json
+```
+
+---
+
+## API Reference
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/api/queue` | Fetch current queue with estimated waits |
+| POST | `/api/queue` | Join the queue |
+| PATCH | `/api/queue/:id` | Update patient status (`called`, `seen`, `skipped`) |
+| DELETE | `/api/queue/:id` | Remove patient from queue |
+| GET | `/api/stats` | Today's session stats |
+
+---
+
+## Academic Context
+
+Built as a group project for the University of Colombo School of Computing. The goal was to design and build a small application using AI-assisted coding that solves a realistic student-related problem.
+
+**Problem:** Campus clinic queues at Sri Lankan universities have no visibility system. Students waste time sitting in waiting rooms with no idea how long they'll wait.
+
+**Solution:** A lightweight, fully local virtual queue system that works on any device connected to the campus network.
+
+---
+
+## Contributors
+
+| Name | GitHub |
+|------|--------|
+| Sandina | [@SandinaRajapaksha](https://github.com/SandinaRajapaksha) |
+| Thulana Gunasekara | [@thul-oshadith](https://github.com/thul-oshadith) |
+| Ravindu Liyanage | [@ravmax-rdl](https://github.com/ravmax-rdl) |
+| Ivishan Rathnayake | [@IvishanR](https://github.com/IvishanR) |
+| Nesitha | [@Nesithasawanjith](https://github.com/Nesithasawanjith) |
+| Chathuri Rajapaksha | [@cnayanathara3-source](https://github.com/cnayanathara3-source) |
+| Dinithi | [@DiniRathnayake05](https://github.com/DiniRathnayake05) |
+| Nethmi Imasha | [@nethmiimasha18](https://github.com/nethmiimasha18) |
+| Niduka Akalanka | [@npaw2005](https://github.com/npaw2005) |
+| Chaniru | [@chanirurandiv37-dev](https://github.com/chanirurandiv37-dev) |
