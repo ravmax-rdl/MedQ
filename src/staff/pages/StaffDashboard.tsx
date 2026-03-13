@@ -1,35 +1,76 @@
-import { Link } from 'react-router-dom';
+import { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { Button } from '@/components/ui/button';
+import StatsBar from '../components/StatsBar';
+import StaffPanel from '../components/StaffPanel';
+import { useAuth } from '@/hooks/useAuth';
+import { toggleTheme, getTheme } from '@/lib/theme';
+import { Moon, Sun, LogOut } from 'lucide-react';
 
 export default function StaffDashboard() {
-  return (
-    <div className="min-h-screen bg-white dark:bg-neutral-950 flex flex-col items-center justify-center gap-8">
-      <div className="text-center">
-        <p className="text-xs uppercase tracking-widest text-neutral-400 dark:text-neutral-500 mb-2">
-          Staff
-        </p>
-        <h1 className="text-3xl font-semibold text-neutral-900 dark:text-neutral-100">Dashboard</h1>
-      </div>
+  const { logout } = useAuth();
+  const navigate = useNavigate();
+  const [theme, setTheme] = useState(getTheme);
 
-      <div className="flex flex-col gap-3 w-48">
-        <Link
-          to="/staff/appointments"
-          className="text-center px-4 py-2 rounded-md border border-neutral-200 dark:border-neutral-800 text-sm text-neutral-700 dark:text-neutral-300 hover:bg-neutral-50 dark:hover:bg-neutral-900 transition-colors"
-        >
-          Appointments
-        </Link>
-        <Link
-          to="/staff/login"
-          className="text-center px-4 py-2 rounded-md border border-neutral-200 dark:border-neutral-800 text-sm text-neutral-500 dark:text-neutral-500 hover:bg-neutral-50 dark:hover:bg-neutral-900 transition-colors"
-        >
-          Log Out
-        </Link>
-        <Link
-          to="/"
-          className="text-center px-4 py-2 rounded-md border border-neutral-200 dark:border-neutral-800 text-sm text-neutral-500 dark:text-neutral-500 hover:bg-neutral-50 dark:hover:bg-neutral-900 transition-colors"
-        >
-          Student Home
-        </Link>
-      </div>
+  function handleThemeToggle() {
+    const next = toggleTheme();
+    setTheme(next);
+  }
+
+  async function handleLogout() {
+    await logout();
+    navigate('/staff/login', { replace: true });
+  }
+
+  return (
+    <div className="min-h-screen bg-background flex flex-col">
+      {/* Header */}
+      <header className="border-b border-border px-6 py-3 flex items-center justify-between">
+        <div className="flex items-center gap-4">
+          <div className="flex items-center gap-3">
+            <img
+              src={theme === 'dark' ? '/white.svg' : '/black.svg'}
+              alt="MedQ"
+              className="h-6"
+            />
+            <span className="text-sm font-medium">MedQ Staff</span>
+          </div>
+          <nav className="flex items-center gap-1 ml-4">
+            <Link
+              to="/staff"
+              className="px-3 py-1 rounded-md text-sm font-medium bg-muted text-foreground"
+            >
+              Queue
+            </Link>
+            <Link
+              to="/staff/appointments"
+              className="px-3 py-1 rounded-md text-sm text-muted-foreground hover:text-foreground transition-colors"
+            >
+              Appointments
+            </Link>
+          </nav>
+        </div>
+        <div className="flex items-center gap-2">
+          <Button variant="ghost" size="icon-sm" onClick={handleThemeToggle} aria-label="Toggle theme">
+            {theme === 'dark' ? <Sun className="size-4" /> : <Moon className="size-4" />}
+          </Button>
+          <Button variant="ghost" size="sm" onClick={handleLogout} className="gap-1.5">
+            <LogOut className="size-3.5" />
+            Sign Out
+          </Button>
+        </div>
+      </header>
+
+      {/* Main */}
+      <main className="flex-1 px-6 py-8 flex flex-col gap-6 max-w-6xl mx-auto w-full">
+        <div>
+          <h1 className="text-xl font-semibold tracking-tight mb-1">Dashboard</h1>
+          <p className="text-sm text-muted-foreground">Today's clinic overview</p>
+        </div>
+
+        <StatsBar />
+        <StaffPanel />
+      </main>
     </div>
   );
 }

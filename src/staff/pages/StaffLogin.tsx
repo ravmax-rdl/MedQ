@@ -1,28 +1,89 @@
-import { Link } from 'react-router-dom';
+import { useState } from 'react';
+import { useNavigate, Link } from 'react-router-dom';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Button } from '@/components/ui/button';
+import { useAuth } from '@/hooks/useAuth';
 
 export default function StaffLogin() {
-  return (
-    <div className="min-h-screen bg-white dark:bg-neutral-950 flex flex-col items-center justify-center gap-8">
-      <div className="text-center">
-        <p className="text-xs uppercase tracking-widest text-neutral-400 dark:text-neutral-500 mb-2">
-          Staff
-        </p>
-        <h1 className="text-3xl font-semibold text-neutral-900 dark:text-neutral-100">Login</h1>
-      </div>
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
+  const { login, isAuthenticated } = useAuth();
+  const navigate = useNavigate();
 
-      <div className="flex flex-col gap-3 w-48">
-        <Link
-          to="/staff"
-          className="text-center px-4 py-2 rounded-md bg-sky-600 hover:bg-sky-700 text-sm text-white transition-colors"
-        >
-          Dashboard
-        </Link>
-        <Link
-          to="/"
-          className="text-center px-4 py-2 rounded-md border border-neutral-200 dark:border-neutral-800 text-sm text-neutral-500 dark:text-neutral-500 hover:bg-neutral-50 dark:hover:bg-neutral-900 transition-colors"
-        >
-          Student Home
-        </Link>
+  if (isAuthenticated) {
+    navigate('/staff', { replace: true });
+    return null;
+  }
+
+  async function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    setError(null);
+    setLoading(true);
+    try {
+      await login(username, password);
+      navigate('/staff', { replace: true });
+    } catch {
+      setError('Invalid username or password');
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  return (
+    <div className="min-h-screen bg-background flex flex-col items-center justify-center px-4">
+      <div className="w-full max-w-sm flex flex-col gap-6">
+        <div className="text-center">
+          <p className="text-xs uppercase tracking-widest text-muted-foreground mb-2">
+            University Health Clinic
+          </p>
+          <h1 className="text-2xl font-semibold tracking-tight">Staff Access</h1>
+        </div>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>Sign In</CardTitle>
+            <CardDescription>Enter your staff credentials to continue.</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+              <div className="flex flex-col gap-1.5">
+                <Label htmlFor="username">Username</Label>
+                <Input
+                  id="username"
+                  autoComplete="username"
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
+                  required
+                />
+              </div>
+              <div className="flex flex-col gap-1.5">
+                <Label htmlFor="password">Password</Label>
+                <Input
+                  id="password"
+                  type="password"
+                  autoComplete="current-password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                />
+              </div>
+              {error && <p className="text-sm text-destructive">{error}</p>}
+              <Button type="submit" disabled={loading} className="mt-1">
+                {loading ? 'Signing in…' : 'Sign In'}
+              </Button>
+            </form>
+          </CardContent>
+        </Card>
+
+        <p className="text-center text-sm text-muted-foreground">
+          <Link to="/" className="hover:text-foreground transition-colors underline underline-offset-2">
+            ← Back to student queue
+          </Link>
+        </p>
       </div>
     </div>
   );

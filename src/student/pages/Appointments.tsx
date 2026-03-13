@@ -1,31 +1,100 @@
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import AppointmentForm from '../components/AppointmentForm';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
+import { CheckCircle } from 'lucide-react';
+import { toggleTheme, getTheme } from '@/lib/theme';
+import { Moon, Sun } from 'lucide-react';
+
+interface Confirmed {
+  date: string;
+  time_slot: string;
+  name: string;
+}
 
 export default function Appointments() {
-  return (
-    <div className="min-h-screen bg-white dark:bg-neutral-950 flex flex-col items-center justify-center gap-8">
-      <div className="text-center">
-        <p className="text-xs uppercase tracking-widest text-neutral-400 dark:text-neutral-500 mb-2">
-          Student
-        </p>
-        <h1 className="text-3xl font-semibold text-neutral-900 dark:text-neutral-100">
-          Appointments
-        </h1>
-      </div>
+  const [confirmed, setConfirmed] = useState<Confirmed | null>(null);
+  const [theme, setTheme] = useState(getTheme);
 
-      <div className="flex flex-col gap-3 w-48">
-        <Link
-          to="/"
-          className="text-center px-4 py-2 rounded-md border border-neutral-200 dark:border-neutral-800 text-sm text-neutral-700 dark:text-neutral-300 hover:bg-neutral-50 dark:hover:bg-neutral-900 transition-colors"
-        >
-          Join Queue
-        </Link>
-        <Link
-          to="/staff/login"
-          className="text-center px-4 py-2 rounded-md border border-neutral-200 dark:border-neutral-800 text-sm text-neutral-500 dark:text-neutral-500 hover:bg-neutral-50 dark:hover:bg-neutral-900 transition-colors"
-        >
-          Staff Login
-        </Link>
-      </div>
+  function handleThemeToggle() {
+    const next = toggleTheme();
+    setTheme(next);
+  }
+
+  function handleBooked(data: Confirmed) {
+    setConfirmed(data);
+  }
+
+  function handleBookAnother() {
+    setConfirmed(null);
+  }
+
+  return (
+    <div className="min-h-screen bg-background flex flex-col">
+      {/* Header */}
+      <header className="border-b border-border px-6 py-3 flex items-center justify-between">
+        <div className="flex items-center gap-3">
+          <img
+            src={theme === 'dark' ? '/white.svg' : '/black.svg'}
+            alt="MedQ"
+            className="h-6"
+          />
+          <span className="text-sm font-medium">MedQ</span>
+        </div>
+        <nav className="flex items-center gap-4">
+          <Link
+            to="/"
+            className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+          >
+            Walk-in Queue
+          </Link>
+          <Link
+            to="/staff/login"
+            className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+          >
+            Staff Login
+          </Link>
+          <Button variant="ghost" size="icon-sm" onClick={handleThemeToggle} aria-label="Toggle theme">
+            {theme === 'dark' ? <Sun className="size-4" /> : <Moon className="size-4" />}
+          </Button>
+        </nav>
+      </header>
+
+      {/* Main content */}
+      <main className="flex-1 flex flex-col items-center justify-start px-4 pt-12 pb-16 gap-8">
+        <div className="text-center max-w-md">
+          <p className="text-xs uppercase tracking-widest text-muted-foreground mb-2">
+            University Health Clinic
+          </p>
+          <h1 className="text-3xl font-semibold tracking-tight">Appointments</h1>
+          <p className="mt-2 text-sm text-muted-foreground">
+            Book a time slot in advance for your clinic visit.
+          </p>
+        </div>
+
+        {confirmed ? (
+          <Card className="w-full max-w-md">
+            <CardContent className="py-10 flex flex-col items-center gap-4 text-center">
+              <CheckCircle className="size-10 text-green-500" />
+              <div>
+                <p className="font-semibold text-lg">Appointment Confirmed</p>
+                <p className="text-sm text-muted-foreground mt-1">
+                  {confirmed.name} · {confirmed.date} at {confirmed.time_slot}
+                </p>
+                <p className="text-sm text-muted-foreground mt-0.5">
+                  Please arrive 5 minutes before your scheduled time.
+                </p>
+              </div>
+              <Button variant="outline" onClick={handleBookAnother} className="mt-2">
+                Book Another Appointment
+              </Button>
+            </CardContent>
+          </Card>
+        ) : (
+          <AppointmentForm onBooked={handleBooked} />
+        )}
+      </main>
     </div>
   );
 }
