@@ -110,7 +110,7 @@ export default function AppointmentForm({ onBooked }: Props) {
                 <SelectTrigger id="appt-slot">
                   <SelectValue placeholder="Select a time" />
                 </SelectTrigger>
-                <SelectContent>
+                <SelectContent className="bg-black">
                   {availableSlots.map((slot) => (
                     <SelectItem key={slot} value={slot}>
                       {slot}
