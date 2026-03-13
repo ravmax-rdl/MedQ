@@ -72,7 +72,7 @@ export default function QueueForm({ onJoined }: Props) {
               <SelectTrigger id="reason">
                 <SelectValue />
               </SelectTrigger>
-              <SelectContent>
+              <SelectContent className="bg-black">
                 {REASONS.map((r) => (
                   <SelectItem key={r} value={r}>
                     {r}
