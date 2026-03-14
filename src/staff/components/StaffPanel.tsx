@@ -96,6 +96,22 @@ export default function StaffPanel() {
     return `${Math.floor(mins / 60)}h ${mins % 60}m`;
   }
 
+  function waitDuration(entry: QueueEntry) {
+    // For waiting/called: show live elapsed time since joining
+    if (entry.status === 'waiting' || entry.status === 'called') {
+      return elapsed(entry.joined_at);
+    }
+    // For seen: show actual time from joining to when they were seen
+    if (entry.status === 'seen' && entry.seen_at) {
+      const mins = Math.floor(
+        (parseDbDate(entry.seen_at).getTime() - parseDbDate(entry.joined_at).getTime()) / 60000
+      );
+      if (mins < 60) return `${mins}m`;
+      return `${Math.floor(mins / 60)}h ${mins % 60}m`;
+    }
+    return '—';
+  }
+
   return (
     <Card className="overflow-hidden">
       <CardHeader className="pb-0 pt-4 px-5 border-b border-border/50 bg-muted/10">
@@ -181,7 +197,7 @@ export default function StaffPanel() {
                           <TableCell className="text-xs text-muted-foreground">
                             <span className="flex items-center gap-1">
                               <Clock className="size-3" />
-                              {elapsed(entry.joined_at)}
+                              {waitDuration(entry)}
                             </span>
                           </TableCell>
                           <TableCell className="text-right pr-5">

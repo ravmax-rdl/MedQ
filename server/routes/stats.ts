@@ -59,15 +59,12 @@ router.get('/', requireAuth, (_req, res) => {
       .get() as { count: number }
   ).count;
 
-  // Average time patients actually spent waiting in queue today (joined → called).
-  // This is the meaningful "wait time" to show students in the stats bar.
+  // Use session_log as the source of truth for avg wait — it is written whenever a
+  // patient is marked 'seen', regardless of whether the 'called' step was used first.
   const avgWait = (
     db
       .prepare(
-        `SELECT AVG((julianday(called_at) - julianday(joined_at)) * 24 * 60) as avg
-         FROM queue
-         WHERE called_at IS NOT NULL
-           AND date(joined_at) = date('now')`
+        `SELECT AVG(duration_mins) as avg FROM session_log WHERE completed_at >= date('now')`
       )
       .get() as { avg: number | null }
   ).avg;
