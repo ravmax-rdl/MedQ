@@ -270,7 +270,7 @@ export default function AppointmentForm({ onBooked }: Props) {
               <SelectTrigger id="appt-reason">
                 <SelectValue />
               </SelectTrigger>
-              <SelectContent>
+              <SelectContent className="bg-black">
                 {REASONS.map((r) => (
                   <SelectItem key={r} value={r}>
                     {r}
