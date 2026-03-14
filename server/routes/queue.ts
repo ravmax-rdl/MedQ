@@ -74,6 +74,22 @@ router.get('/:id', (req, res) => {
   });
 });
 
+// Student self-removal — no auth required (student leaves their own entry)
+router.delete('/:id/leave', (req, res) => {
+  const { id } = req.params;
+
+  const entry = db.prepare(`SELECT id FROM queue WHERE id = ?`).get(id);
+  if (!entry) {
+    res.status(404).json({ error: 'Queue entry not found' });
+    return;
+  }
+
+  db.prepare(`DELETE FROM queue WHERE id = ?`).run(id);
+  recalcPositions();
+
+  res.json({ ok: true });
+});
+
 router.post('/', (req, res) => {
   const { name, student_id, reason } = req.body as {
     name: string;

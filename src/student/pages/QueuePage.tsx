@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import QueueForm from '../components/QueueForm';
 import QueueBoard from '../components/QueueBoard';
 import StudentHeader from '../components/StudentHeader';
+import { leaveQueue } from '@/lib/api';
 import { ArrowLeft } from 'lucide-react';
 
 export default function QueuePage() {
@@ -15,7 +16,10 @@ export default function QueuePage() {
     setMyQueueId(id);
   }
 
-  function handleLeave() {
+  function handleLeave(shouldDelete: boolean = true) {
+    if (shouldDelete && myQueueId !== null) {
+      leaveQueue(myQueueId).catch(() => {});
+    }
     localStorage.removeItem('medq-queue-id');
     setMyQueueId(null);
   }

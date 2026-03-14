@@ -18,7 +18,7 @@ const STATUS_COLORS: Record<QueueEntry['status'], string> = {
 
 interface Props {
   myId: number;
-  onLeave: () => void;
+  onLeave: (shouldDelete?: boolean) => void;
 }
 
 export default function QueueBoard({ myId, onLeave }: Props) {
@@ -33,7 +33,7 @@ export default function QueueBoard({ myId, onLeave }: Props) {
         setMyEntry(entry);
         setMyEntryLoading(false);
         // Only auto-leave if the entry no longer exists (was deleted)
-        if (entry === null) onLeave();
+        if (entry === null) onLeave(false);
       })
       .catch(() => setMyEntryLoading(false));
   }, [myId, onLeave]);
@@ -136,7 +136,7 @@ export default function QueueBoard({ myId, onLeave }: Props) {
                   </span>
                 )}
                 <button
-                  onClick={onLeave}
+                  onClick={() => onLeave(true)}
                   className="flex items-center gap-1 text-xs text-muted-foreground hover:text-destructive transition-colors"
                 >
                   <LogOut className="size-3" />
@@ -150,7 +150,7 @@ export default function QueueBoard({ myId, onLeave }: Props) {
 
       {/* Seen/Skipped — leave button */}
       {(isSeen || isSkipped) && (
-        <Button variant="outline" size="sm" onClick={onLeave} className="self-start">
+        <Button variant="outline" size="sm" onClick={() => onLeave(false)} className="self-start">
           <LogOut className="size-3.5 mr-2" />
           Done
         </Button>

@@ -44,7 +44,7 @@ interface Props {
 }
 
 export default function AppointmentCalendar({ date }: Props) {
-  const { appointments, loading, refresh } = useAppointments(date);
+  const { appointments, loading, error, refresh } = useAppointments(date);
   const [tab, setTab] = useState<TabValue>('all');
 
   async function handleAction(id: number, action: 'confirm' | 'complete' | 'cancel') {
@@ -77,6 +77,16 @@ export default function AppointmentCalendar({ date }: Props) {
     return (
       <Card>
         <CardContent className="py-10 text-center text-sm text-muted-foreground">Loading…</CardContent>
+      </Card>
+    );
+  }
+
+  if (error && appointments.length === 0) {
+    return (
+      <Card>
+        <CardContent className="py-10 text-center text-sm text-destructive">
+          Failed to load appointments: {error}
+        </CardContent>
       </Card>
     );
   }
