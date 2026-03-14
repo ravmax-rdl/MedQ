@@ -11,7 +11,6 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
-import { useAppointments } from '@/hooks/useAppointments';
 import { updateAppointmentStatus, cancelAppointment, type Appointment } from '@/lib/api';
 import { CheckCircle2, XCircle, CheckCheck, RefreshCw, CalendarClock } from 'lucide-react';
 
@@ -41,10 +40,13 @@ type TabValue = 'all' | Appointment['status'];
 
 interface Props {
   date: string;
+  appointments: Appointment[];
+  loading: boolean;
+  error: string | null;
+  refresh: () => void;
 }
 
-export default function AppointmentCalendar({ date }: Props) {
-  const { appointments, loading, error, refresh } = useAppointments(date);
+export default function AppointmentCalendar({ date, appointments, loading, error, refresh }: Props) {
   const [tab, setTab] = useState<TabValue>('all');
 
   async function handleAction(id: number, action: 'confirm' | 'complete' | 'cancel') {

@@ -4,6 +4,10 @@ import { Separator } from '@/components/ui/separator';
 import { Button } from '@/components/ui/button';
 import { AppSidebar } from '../components/AppSidebar';
 import AppointmentCalendar from '../components/AppointmentCalendar';
+import AppointmentStatsBar from '../components/AppointmentStatsBar';
+import { AppointmentStatusChart } from '../components/AppointmentStatusChart';
+import { AppointmentTrendChart } from '../components/AppointmentTrendChart';
+import { useAppointments } from '@/hooks/useAppointments';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 
 function todayStr(): string {
@@ -27,6 +31,7 @@ function offsetDate(base: string, days: number): string {
 
 export default function StaffAppointments() {
   const [date, setDate] = useState(todayStr);
+  const { appointments, loading, error, refresh } = useAppointments(date);
 
   const isToday = date === todayStr();
 
@@ -45,6 +50,7 @@ export default function StaffAppointments() {
         </header>
 
         <div className="flex flex-col gap-6 p-6">
+          {/* Header + date navigator */}
           <div className="flex items-end justify-between gap-4 flex-wrap">
             <div>
               <h1 className="text-xl font-semibold tracking-tight">Appointments</h1>
@@ -97,7 +103,27 @@ export default function StaffAppointments() {
             </div>
           </div>
 
-          <AppointmentCalendar date={date} />
+          {/* Stats bar — reacts to selected date */}
+          <AppointmentStatsBar appointments={appointments} />
+
+          {/* Charts row */}
+          <div className="grid grid-cols-1 gap-4 lg:grid-cols-5">
+            <div className="lg:col-span-3">
+              <AppointmentTrendChart />
+            </div>
+            <div className="lg:col-span-2">
+              <AppointmentStatusChart appointments={appointments} />
+            </div>
+          </div>
+
+          {/* Appointment table */}
+          <AppointmentCalendar
+            date={date}
+            appointments={appointments}
+            loading={loading}
+            error={error}
+            refresh={refresh}
+          />
         </div>
       </SidebarInset>
     </SidebarProvider>
