@@ -9,6 +9,13 @@ import {
   ChartTooltipContent,
   type ChartConfig,
 } from '@/components/ui/chart';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import { getDailyStats } from '@/lib/api';
 
 const chartConfig = {
@@ -24,22 +31,15 @@ const chartConfig = {
 
 export function AppointmentTrendChart() {
   const [data, setData] = React.useState<
-    Array<{ date: string; appointments: number; appointments_completed: number; label: string }>
+    Array<{ date: string; appointments: number; appointments_completed: number }>
   >([]);
+  const [range, setRange] = React.useState<'7d' | '3d'>('7d');
 
   React.useEffect(() => {
     function load() {
       getDailyStats()
         .then((rows) => {
-          setData(
-            rows.map((d) => ({
-              ...d,
-              label: new Date(d.date + 'T00:00:00').toLocaleDateString('en-US', {
-                month: 'short',
-                day: 'numeric',
-              }),
-            }))
-          );
+          setData(rows);
         })
         .catch(() => {});
     }
@@ -48,17 +48,38 @@ export function AppointmentTrendChart() {
     return () => clearInterval(interval);
   }, []);
 
+  const filtered = range === '3d' ? data.slice(-3) : data;
+
+  const formatted = filtered.map((d) => ({
+    ...d,
+    label: new Date(d.date + 'T00:00:00').toLocaleDateString('en-US', {
+      month: 'short',
+      day: 'numeric',
+    }),
+  }));
+
   return (
     <Card className="pt-0">
       <CardHeader className="flex items-center gap-2 space-y-0 border-b py-5 sm:flex-row">
         <div className="grid flex-1 gap-1">
           <CardTitle className="text-base">Appointment Trends</CardTitle>
-          <CardDescription>Total booked vs completed — last 7 days</CardDescription>
+          <CardDescription>
+            Total booked vs completed — {range === '3d' ? 'last 3 days' : 'last 7 days'}
+          </CardDescription>
         </div>
+        <Select value={range} onValueChange={(v) => setRange(v as '7d' | '3d')}>
+          <SelectTrigger className="h-8 w-32.5 text-xs" aria-label="Select range">
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="7d">Last 7 days</SelectItem>
+            <SelectItem value="3d">Last 3 days</SelectItem>
+          </SelectContent>
+        </Select>
       </CardHeader>
       <CardContent className="px-2 pt-4 sm:px-6 sm:pt-6">
-        <ChartContainer config={chartConfig} className="aspect-auto h-[220px] w-full">
-          <BarChart data={data} barCategoryGap="30%">
+        <ChartContainer config={chartConfig} className="aspect-auto h-55 w-full">
+          <BarChart data={formatted} barCategoryGap="30%">
             <CartesianGrid vertical={false} strokeDasharray="3 3" />
             <XAxis
               dataKey="label"
@@ -76,11 +97,7 @@ export function AppointmentTrendChart() {
               allowDecimals={false}
             />
             <ChartTooltip cursor={false} content={<ChartTooltipContent indicator="dot" />} />
-            <Bar
-              dataKey="appointments"
-              fill="var(--color-appointments)"
-              radius={[4, 4, 0, 0]}
-            />
+            <Bar dataKey="appointments" fill="var(--color-appointments)" radius={[4, 4, 0, 0]} />
             <Bar
               dataKey="appointments_completed"
               fill="var(--color-appointments_completed)"
