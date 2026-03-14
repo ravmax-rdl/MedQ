@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from 'recharts';
+import { Area, AreaChart, CartesianGrid, XAxis, YAxis } from 'recharts';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import {
   ChartContainer,
@@ -79,7 +79,25 @@ export function AppointmentTrendChart() {
       </CardHeader>
       <CardContent className="px-2 pt-4 sm:px-6 sm:pt-6">
         <ChartContainer config={chartConfig} className="aspect-auto h-55 w-full">
-          <BarChart data={formatted} barCategoryGap="30%">
+          <AreaChart data={formatted}>
+            <defs>
+              <linearGradient id="fillAppointments" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="5%" stopColor="var(--color-appointments)" stopOpacity={0.8} />
+                <stop offset="95%" stopColor="var(--color-appointments)" stopOpacity={0.1} />
+              </linearGradient>
+              <linearGradient id="fillAppointmentsCompleted" x1="0" y1="0" x2="0" y2="1">
+                <stop
+                  offset="5%"
+                  stopColor="var(--color-appointments_completed)"
+                  stopOpacity={0.8}
+                />
+                <stop
+                  offset="95%"
+                  stopColor="var(--color-appointments_completed)"
+                  stopOpacity={0.1}
+                />
+              </linearGradient>
+            </defs>
             <CartesianGrid vertical={false} strokeDasharray="3 3" />
             <XAxis
               dataKey="label"
@@ -97,14 +115,22 @@ export function AppointmentTrendChart() {
               allowDecimals={false}
             />
             <ChartTooltip cursor={false} content={<ChartTooltipContent indicator="dot" />} />
-            <Bar dataKey="appointments" fill="var(--color-appointments)" radius={[4, 4, 0, 0]} />
-            <Bar
+            <Area
+              dataKey="appointments"
+              type="monotone"
+              fill="url(#fillAppointments)"
+              stroke="var(--color-appointments)"
+              strokeWidth={2}
+            />
+            <Area
               dataKey="appointments_completed"
-              fill="var(--color-appointments_completed)"
-              radius={[4, 4, 0, 0]}
+              type="monotone"
+              fill="url(#fillAppointmentsCompleted)"
+              stroke="var(--color-appointments_completed)"
+              strokeWidth={2}
             />
             <ChartLegend content={<ChartLegendContent />} />
-          </BarChart>
+          </AreaChart>
         </ChartContainer>
       </CardContent>
     </Card>
