@@ -91,7 +91,7 @@ export default function QueueForm({ onJoined }: Props) {
                   key={label}
                   type="button"
                   onClick={() => setReason(label)}
-                  className={`flex flex-col items-center gap-1.5 rounded-lg border px-2 py-3 text-center text-xs font-medium transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${
+                  className={`flex flex-col items-center gap-1.5 border px-2 py-3 text-center text-xs font-medium transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${
                     reason === label
                       ? 'border-sky-500 bg-sky-50 text-sky-700 dark:border-sky-500 dark:bg-sky-950/50 dark:text-sky-300 shadow-sm'
                       : 'border-neutral-200 bg-white text-neutral-500 hover:border-sky-300 hover:bg-sky-50/50 hover:text-sky-700 dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-400 dark:hover:border-sky-700 dark:hover:bg-sky-950/30 dark:hover:text-sky-300'
@@ -105,7 +105,7 @@ export default function QueueForm({ onJoined }: Props) {
           </div>
 
           {error && (
-            <p className="text-sm text-destructive rounded-md bg-destructive/10 px-3 py-2">
+            <p className="text-sm text-destructive bg-destructive/10 px-3 py-2">
               {error}
             </p>
           )}
@@ -117,7 +117,7 @@ export default function QueueForm({ onJoined }: Props) {
           >
             {loading ? (
               <span className="flex items-center gap-2">
-                <span className="size-3.5 rounded-full border-2 border-white/30 border-t-white animate-spin" />
+                <span className="size-3.5 border-2 border-white/30 border-t-white animate-spin" />
                 Joining…
               </span>
             ) : (

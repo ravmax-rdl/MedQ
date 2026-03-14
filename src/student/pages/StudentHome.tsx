@@ -23,7 +23,7 @@ export default function StudentHome() {
   const queueCount = useQueueCount();
 
   return (
-    <div className="relative min-h-screen bg-white background flex flex-col overflow-x-clip">
+    <div className="relative min-h-screen  background flex flex-col overflow-x-clip">
       <StudentHeader />
 
       <main className="flex-1 flex flex-col items-center">
@@ -35,13 +35,13 @@ export default function StudentHome() {
           />
           <div
             aria-hidden
-            className="pointer-events-none absolute top-0 left-1/2 -translate-x-1/2 w-150 h-75 rounded-full bg-sky-200/30 dark:bg-sky-500/10 blur-3xl"
+            className="pointer-events-none absolute top-0 left-1/2 -translate-x-1/2 w-150 h-75 bg-sky-200/30 dark:bg-sky-500/10 blur-3xl"
           />
 
           <div className="relative z-10 flex flex-col items-center gap-5 max-w-2xl">
-            <span className="inline-flex items-center gap-1.5 rounded-full border border-sky-200 dark:border-sky-800 bg-white/80 dark:bg-sky-950/60 px-3 py-1 text-xs font-medium text-sky-700 dark:text-sky-300 backdrop-blur-sm shadow-sm">
-              <span className="size-1.5 rounded-full bg-sky-500 dark:bg-sky-400" />
-              University Health Clinic
+            <span className="inline-flex items-center gap-1.5 border rounded-full border-sky-200 dark:border-sky-800 bg-white/80 dark:bg-sky-950/60 px-3 py-1 text-xs font-medium text-sky-700 dark:text-sky-300 backdrop-blur-sm shadow-sm">
+              <span className="size-1.5 bg-sky-500 dark:bg-sky-400" />
+              UOC Medical Center
             </span>
 
             <h1 className="text-6xl font-bold tracking-tight leading-[1.1] sm:text-6xl lg:text-[6rem]">
@@ -51,7 +51,7 @@ export default function StudentHome() {
             </h1>
 
             <p className="text-base text-muted-foreground max-w-sm leading-relaxed sm:max-w-md">
-              Join the walk-in queue online or book an appointment slot in advance. No app, no
+              Join the walk-in queue online or book an appointment slot in advance. No hassle, no
               waiting room.
             </p>
 
@@ -76,8 +76,12 @@ export default function StudentHome() {
           <div className="max-w-3xl mx-auto px-5 py-4 sm:px-8 grid grid-cols-3 gap-4 text-center">
             {[
               { icon: Clock, label: 'Clinic hours', value: 'Mon–Fri, 9 am – 4 pm' },
-              { icon: MapPin, label: 'Location', value: 'Student Services Bldg, Level 2' },
-              { icon: Phone, label: 'Reception', value: '(03) 9000 1234' },
+              {
+                icon: MapPin,
+                label: 'Location',
+                value: 'University of Colombo Medical Center, Colombo 07',
+              },
+              { icon: Phone, label: 'Reception', value: '+(94) 777 677 222' },
             ].map(({ icon: Icon, label, value }) => (
               <div key={label} className="flex flex-col items-center gap-1">
                 <Icon className="size-4 text-sky-500 dark:text-sky-400 mb-0.5" />
@@ -123,9 +127,7 @@ export default function StudentHome() {
               to={href}
               className="group border border-border/60 bg-card p-5 flex flex-col gap-3 hover:border-border hover:shadow-sm transition-all duration-200"
             >
-              <div
-                className={`inline-flex size-9 items-center justify-center ${iconBg}`}
-              >
+              <div className={`inline-flex size-9 items-center justify-center ${iconBg}`}>
                 <Icon className={`size-4 ${accent}`} />
               </div>
               <div>

@@ -4,7 +4,7 @@ import { Separator } from '@/components/ui/separator';
 import { Button } from '@/components/ui/button';
 import { AppSidebar } from '../components/AppSidebar';
 import AppointmentCalendar from '../components/AppointmentCalendar';
-import { ChevronLeft, ChevronRight, CalendarDays } from 'lucide-react';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 
 function todayStr(): string {
   const now = new Date();
@@ -64,8 +64,7 @@ export default function StaffAppointments() {
                 <ChevronLeft className="size-4" />
               </Button>
 
-              <div className="flex items-center gap-2 rounded-md border border-border px-3 h-8 text-sm min-w-40 justify-center">
-                <CalendarDays className="size-3.5 text-muted-foreground" />
+              <div className="flex items-center gap-2 border border-border px-3 h-8 text-sm min-w-40 justify-center">
                 <input
                   type="date"
                   value={date}

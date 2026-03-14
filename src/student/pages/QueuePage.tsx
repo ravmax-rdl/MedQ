@@ -37,9 +37,6 @@ export default function QueuePage() {
               Back to home
             </Link>
           )}
-          <p className="text-xs uppercase tracking-widest text-muted-foreground mb-1">
-            University Health Clinic
-          </p>
           <h1 className="text-2xl font-bold tracking-tight">
             {inQueue ? 'Your Queue Status' : 'Walk-in Queue'}
           </h1>

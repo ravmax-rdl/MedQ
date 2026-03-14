@@ -5,24 +5,17 @@ import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { Calendar } from '@/components/ui/calendar';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
 import { bookAppointment, getAvailableSlots } from '@/lib/api';
-import { CalendarDays, Clock } from 'lucide-react';
+import { ArrowRightLeft, Brain, CalendarDays, CircleDot, FileText, Pill, Stethoscope, Syringe } from 'lucide-react';
 
-const REASONS = [
-  'General',
-  'Sick Leave',
-  'Prescription',
-  'Referral',
-  'Vaccination',
-  'Mental Health',
-  'Other',
+const REASONS: { label: string; icon: React.ElementType }[] = [
+  { label: 'General', icon: Stethoscope },
+  { label: 'Sick Leave', icon: FileText },
+  { label: 'Prescription', icon: Pill },
+  { label: 'Referral', icon: ArrowRightLeft },
+  { label: 'Vaccination', icon: Syringe },
+  { label: 'Mental Health', icon: Brain },
+  { label: 'Other', icon: CircleDot },
 ];
 
 const ALL_SLOTS = [
@@ -64,15 +57,6 @@ function offsetDate(base: string, days: number): string {
   const nextMonth = String(d.getMonth() + 1).padStart(2, '0');
   const nextDay = String(d.getDate()).padStart(2, '0');
   return `${nextYear}-${nextMonth}-${nextDay}`;
-}
-
-function formatDateLabel(dateStr: string) {
-  const d = new Date(dateStr + 'T00:00:00');
-  const today = todayStr();
-  const tomorrow = offsetDate(today, 1);
-  if (dateStr === today) return 'Today';
-  if (dateStr === tomorrow) return 'Tomorrow';
-  return d.toLocaleDateString(undefined, { weekday: 'short', month: 'short', day: 'numeric' });
 }
 
 function isWeekend(dateStr: string) {
@@ -181,10 +165,7 @@ export default function AppointmentForm({ onBooked }: Props) {
 
           {/* Date navigator */}
           <div className="flex flex-col gap-2">
-            <Label className="flex items-center gap-1.5">
-              <CalendarDays className="size-3.5 text-muted-foreground" />
-              Date
-            </Label>
+            <Label className="flex items-center gap-1.5">Date</Label>
             <Popover>
               <PopoverTrigger asChild>
                 <Button
@@ -194,7 +175,6 @@ export default function AppointmentForm({ onBooked }: Props) {
                   aria-label="Select appointment date"
                 >
                   <span>
-                    {formatDateLabel(date)}{' '}
                     <span className="text-muted-foreground text-xs">
                       {selectedDate.toLocaleDateString(undefined, {
                         month: 'short',
@@ -227,7 +207,6 @@ export default function AppointmentForm({ onBooked }: Props) {
           {/* Time slot grid */}
           <div className="flex flex-col gap-2">
             <Label className="flex items-center gap-1.5">
-              <Clock className="size-3.5 text-muted-foreground" />
               Time Slot
               {loadingSlots && (
                 <span className="text-xs text-muted-foreground font-normal">Loading…</span>
@@ -243,7 +222,7 @@ export default function AppointmentForm({ onBooked }: Props) {
                     type="button"
                     disabled={!available || loadingSlots}
                     onClick={() => setTimeSlot(slot)}
-                    className={`rounded-md border py-2 text-xs font-medium transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${
+                    className={`border py-2 text-xs font-medium transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${
                       selected
                         ? 'border-sky-500 bg-sky-500 text-white shadow-sm dark:border-sky-400 dark:bg-sky-500'
                         : available
@@ -266,25 +245,27 @@ export default function AppointmentForm({ onBooked }: Props) {
           {/* Reason */}
           <div className="flex flex-col gap-2">
             <Label htmlFor="appt-reason">Reason for Visit</Label>
-            <Select value={reason} onValueChange={setReason}>
-              <SelectTrigger id="appt-reason">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent className="bg-black">
-                {REASONS.map((r) => (
-                  <SelectItem key={r} value={r}>
-                    {r}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+            
+            <div className="grid grid-cols-3 gap-2 sm:grid-cols-4">
+              {REASONS.map(({ label, icon: Icon }) => (
+                <button
+                  key={label}
+                  type="button"
+                  onClick={() => setReason(label)}
+                  className={`flex flex-col items-center gap-1.5 border px-2 py-3 text-center text-xs font-medium transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${
+                    reason === label
+                      ? 'border-sky-500 bg-sky-50 text-sky-700 dark:border-sky-500 dark:bg-sky-950/50 dark:text-sky-300 shadow-sm'
+                      : 'border-neutral-200 bg-white text-neutral-500 hover:border-sky-300 hover:bg-sky-50/50 hover:text-sky-700 dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-400 dark:hover:border-sky-700 dark:hover:bg-sky-950/30 dark:hover:text-sky-300'
+                  }`}
+                >
+                  <Icon className="size-4 shrink-0" />
+                  {label}
+                </button>
+              ))}
+            </div>
           </div>
 
-          {error && (
-            <p className="text-sm text-destructive rounded-md bg-destructive/10 px-3 py-2">
-              {error}
-            </p>
-          )}
+          {error && <p className="text-sm text-destructive bg-destructive/10 px-3 py-2">{error}</p>}
 
           <Button
             type="submit"
@@ -293,7 +274,7 @@ export default function AppointmentForm({ onBooked }: Props) {
           >
             {loading ? (
               <span className="flex items-center gap-2">
-                <span className="size-3.5 rounded-full border-2 border-white/30 border-t-white animate-spin" />
+                <span className="size-3.5 border-2 border-white/30 border-t-white animate-spin" />
                 Booking…
               </span>
             ) : (

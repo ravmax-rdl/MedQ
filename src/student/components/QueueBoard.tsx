@@ -65,10 +65,10 @@ export default function QueueBoard({ myId, onLeave }: Props) {
 
       {/* Called — prominent animated banner */}
       {isCalled && (
-        <div className="relative overflow-hidden rounded-xl border border-sky-300 dark:border-sky-700 bg-sky-50 dark:bg-sky-950/40 p-5">
+        <div className="relative overflow-hidden border border-sky-300 dark:border-sky-700 bg-sky-50 dark:bg-sky-950/40 p-5">
           <div className="absolute inset-0 animate-pulse bg-sky-100/40 dark:bg-sky-900/20 pointer-events-none" />
           <div className="relative flex items-start gap-3">
-            <div className="rounded-full bg-sky-500 p-2 shrink-0 mt-0.5">
+            <div className="bg-sky-500 p-2 shrink-0 mt-0.5">
               <BellRing className="size-4 text-white" />
             </div>
             <div>
@@ -118,7 +118,7 @@ export default function QueueBoard({ myId, onLeave }: Props) {
               <div className="flex flex-col gap-2">
                 <div className="flex items-center gap-2">
                   <span
-                    className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium ${STATUS_COLORS[myEntry.status]}`}
+                    className={`inline-flex items-center px-2 py-0.5 text-xs font-medium ${STATUS_COLORS[myEntry.status]}`}
                   >
                     {myEntry.status}
                   </span>
@@ -164,7 +164,7 @@ export default function QueueBoard({ myId, onLeave }: Props) {
             Current Queue
           </CardTitle>
           <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
-            <span className="size-1.5 rounded-full bg-green-500 animate-pulse inline-block" />
+            <span className="size-1.5 bg-green-500 animate-pulse inline-block" />
             Live
           </div>
         </CardHeader>

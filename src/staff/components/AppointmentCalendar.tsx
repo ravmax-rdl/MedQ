@@ -115,7 +115,7 @@ export default function AppointmentCalendar({ date }: Props) {
                 className="rounded-none border-b-2 border-transparent data-[state=active]:border-sky-500 data-[state=active]:bg-transparent data-[state=active]:text-sky-600 dark:data-[state=active]:text-sky-400 h-8 px-3 text-xs capitalize"
               >
                 {t === 'all' ? 'All' : t}
-                <span className="ml-1.5 inline-flex items-center justify-center rounded-full bg-muted px-1.5 py-0.5 text-[10px] font-medium tabular-nums">
+                <span className="ml-1.5 inline-flex items-center justify-center bg-muted px-1.5 py-0.5 text-[10px] font-medium tabular-nums">
                   {counts[t]}
                 </span>
               </TabsTrigger>
@@ -167,7 +167,7 @@ export default function AppointmentCalendar({ date }: Props) {
                           <TableCell>
                             <Badge
                               variant="outline"
-                              className={`text-xs rounded-sm px-1.5 py-0 ${STATUS_BADGE[appt.status].className}`}
+                              className={`text-xs px-1.5 py-0 ${STATUS_BADGE[appt.status].className}`}
                             >
                               {STATUS_BADGE[appt.status].label}
                             </Badge>

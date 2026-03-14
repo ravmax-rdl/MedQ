@@ -57,12 +57,12 @@ export function ActivityChart() {
           <CardDescription>Walk-ins and appointments over time</CardDescription>
         </div>
         <Select value={range} onValueChange={(v) => setRange(v as '7d' | '3d')}>
-          <SelectTrigger className="w-[130px] rounded-lg text-xs h-8" aria-label="Select range">
+          <SelectTrigger className="w-[130px] text-xs h-8" aria-label="Select range">
             <SelectValue />
           </SelectTrigger>
-          <SelectContent className="rounded-xl">
-            <SelectItem value="7d" className="rounded-lg">Last 7 days</SelectItem>
-            <SelectItem value="3d" className="rounded-lg">Last 3 days</SelectItem>
+          <SelectContent>
+            <SelectItem value="7d" >Last 7 days</SelectItem>
+            <SelectItem value="3d" >Last 3 days</SelectItem>
           </SelectContent>
         </Select>
       </CardHeader>

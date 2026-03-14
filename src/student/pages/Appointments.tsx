@@ -113,9 +113,7 @@ function AppointmentLookup() {
               </p>
             </div>
             {error && (
-              <p className="text-sm text-destructive bg-destructive/10 rounded-md px-3 py-2">
-                {error}
-              </p>
+              <p className="text-sm text-destructive bg-destructive/10 px-3 py-2">{error}</p>
             )}
           </form>
         </CardContent>
@@ -135,7 +133,7 @@ function AppointmentLookup() {
                 <CardContent className="py-4 px-4">
                   <div className="flex items-start justify-between gap-3">
                     <div className="flex items-start gap-3">
-                      <div className="rounded-lg bg-muted/60 p-2 shrink-0 mt-0.5">
+                      <div className="bg-muted/60 p-2 shrink-0 mt-0.5">
                         <CalendarDays className="size-4 text-sky-500" />
                       </div>
                       <div className="flex flex-col gap-0.5">
@@ -154,7 +152,7 @@ function AppointmentLookup() {
                     </div>
                     <Badge
                       variant="outline"
-                      className={`shrink-0 text-xs rounded-sm ${STATUS_CONFIG[appt.status].className}`}
+                      className={`shrink-0 text-xs ${STATUS_CONFIG[appt.status].className}`}
                     >
                       {STATUS_CONFIG[appt.status].label}
                     </Badge>
@@ -187,21 +185,17 @@ export default function Appointments() {
 
       <main className="flex-1 flex flex-col items-center px-5 pt-10 pb-16 gap-8 sm:px-8">
         {/* Page hero */}
-        <div className="w-full max-w-lg text-center">
-          <div className="w-full max-w-2xl">
-            <Link
-              to="/"
-              className="inline-flex items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground mb-5 transition-colors"
-            >
-              <ArrowLeft className="size-3" />
-              Back to home
-            </Link>
-            <p className="text-xs uppercase tracking-widest text-muted-foreground mb-1">
-              University Health Clinic
-            </p>
-          </div>
-          <h1 className="text-2xl font-bold tracking-tight sm:text-3xl">Appointments</h1>
-          <p className="mt-2 text-sm text-muted-foreground">
+        <div className="w-full max-w-2xl">
+          <Link
+            to="/"
+            className="inline-flex items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground mb-5 transition-colors"
+          >
+            <ArrowLeft className="size-3" />
+            Back to home
+          </Link>
+
+          <h1 className="text-2xl font-bold tracking-tight">Appointments</h1>
+          <p className="text-sm text-muted-foreground mt-1">
             Book a time slot in advance or check the status of your existing appointment.
           </p>
         </div>
@@ -209,16 +203,15 @@ export default function Appointments() {
         {/* Booking confirmation */}
         {confirmed ? (
           <Card className="w-full max-w-lg shadow-sm overflow-hidden">
-            <div className="h-1.5 bg-gradient-to-r from-sky-400 to-emerald-400" />
             <CardContent className="py-10 flex flex-col items-center gap-5 text-center px-8">
-              <div className="flex items-center justify-center size-14 rounded-full bg-green-100 dark:bg-green-950/40">
+              <div className="flex items-center justify-center size-14 bg-green-100 dark:bg-green-950/40">
                 <CheckCircle2 className="size-7 text-green-600 dark:text-green-400" />
               </div>
               <div className="flex flex-col gap-1">
                 <p className="font-bold text-xl">Appointment Confirmed</p>
                 <p className="text-muted-foreground text-sm">{confirmed.name}</p>
               </div>
-              <div className="w-full rounded-lg bg-muted/50 dark:bg-muted/20 border border-border/60 px-5 py-4 flex flex-col gap-3 text-sm">
+              <div className="w-full bg-muted/50 dark:bg-muted/20 border border-border/60 px-5 py-4 flex flex-col gap-3 text-sm">
                 <div className="flex items-center justify-between">
                   <span className="text-muted-foreground flex items-center gap-1.5">
                     <CalendarDays className="size-3.5" />

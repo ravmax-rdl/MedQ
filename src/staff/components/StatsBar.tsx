@@ -30,21 +30,21 @@ export default function StatsBar() {
       value: stats?.currently_waiting ?? '—',
       sub: 'In queue',
       icon: Users,
-      accent: 'text-violet-500',
+      accent: 'text-sky-500',
     },
     {
       label: 'Avg wait time',
       value: stats?.avg_wait_mins != null ? `${stats.avg_wait_mins}m` : '—',
       sub: 'Per patient today',
       icon: Clock,
-      accent: 'text-amber-500',
+      accent: 'text-sky-500',
     },
     {
       label: 'Appointments',
       value: stats?.appointments_today ?? '—',
       sub: 'Booked / confirmed',
       icon: CalendarDays,
-      accent: 'text-emerald-500',
+      accent: 'text-sky-500',
     },
   ];
 
@@ -62,7 +62,7 @@ export default function StatsBar() {
                   {sub}
                 </p>
               </div>
-              <div className={`rounded-lg bg-muted/60 p-2 ${accent}`}>
+              <div className={`bg-muted/60 p-2 ${accent}`}>
                 <Icon className="size-4" />
               </div>
             </div>
