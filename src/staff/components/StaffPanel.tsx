@@ -1,3 +1,4 @@
+import React from 'react';
 import { useState } from 'react';
 import { parseDbDate } from '@/lib/utils';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -15,7 +16,10 @@ import { Badge } from '@/components/ui/badge';
 import { updateQueueStatus, removeFromQueue, type QueueEntry } from '@/lib/api';
 import { Clock, Phone, Eye, SkipForward, Trash2, RefreshCw } from 'lucide-react';
 
-const STATUS_BADGE: Record<QueueEntry['status'], { label: string; variant: string; className: string }> = {
+const STATUS_BADGE: Record<
+  QueueEntry['status'],
+  { label: string; variant: string; className: string }
+> = {
   waiting: {
     label: 'Waiting',
     variant: 'outline',
@@ -29,12 +33,14 @@ const STATUS_BADGE: Record<QueueEntry['status'], { label: string; variant: strin
   seen: {
     label: 'Seen',
     variant: 'outline',
-    className: 'border-green-400 text-green-700 bg-green-50 dark:bg-green-950/30 dark:text-green-300',
+    className:
+      'border-green-400 text-green-700 bg-green-50 dark:bg-green-950/30 dark:text-green-300',
   },
   skipped: {
     label: 'Skipped',
     variant: 'outline',
-    className: 'border-orange-400 text-orange-700 bg-orange-50 dark:bg-orange-950/30 dark:text-orange-300',
+    className:
+      'border-orange-400 text-orange-700 bg-orange-50 dark:bg-orange-950/30 dark:text-orange-300',
   },
 };
 
@@ -48,6 +54,14 @@ interface Props {
 
 export default function StaffPanel({ queue, loading, refresh }: Props) {
   const [tab, setTab] = useState<TabValue>('all');
+  const [now, setNow] = useState(() => Date.now());
+
+  // Update 'now' every 30 seconds for live elapsed times
+  // (adjust interval as needed for UI responsiveness)
+  React.useEffect(() => {
+    const interval = setInterval(() => setNow(Date.now()), 30000);
+    return () => clearInterval(interval);
+  }, []);
 
   async function handleAction(id: number, action: 'call' | 'seen' | 'skip' | 'requeue' | 'remove') {
     try {
@@ -79,16 +93,16 @@ export default function StaffPanel({ queue, loading, refresh }: Props) {
     return parseDbDate(iso).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
   }
 
-  function elapsed(iso: string) {
-    const mins = Math.floor((Date.now() - parseDbDate(iso).getTime()) / 60000);
+  function elapsed(iso: string, nowValue: number) {
+    const mins = Math.floor((nowValue - parseDbDate(iso).getTime()) / 60000);
     if (mins < 60) return `${mins}m`;
     return `${Math.floor(mins / 60)}h ${mins % 60}m`;
   }
 
-  function waitDuration(entry: QueueEntry) {
+  function waitDuration(entry: QueueEntry, nowValue: number) {
     // For waiting/called: show live elapsed time since joining
     if (entry.status === 'waiting' || entry.status === 'called') {
-      return elapsed(entry.joined_at);
+      return elapsed(entry.joined_at, nowValue);
     }
     // For seen: show actual time from joining to when they were seen
     if (entry.status === 'seen' && entry.seen_at) {
@@ -106,12 +120,17 @@ export default function StaffPanel({ queue, loading, refresh }: Props) {
       <CardHeader className="pb-0 pt-4 px-5 border-b border-border/50 bg-muted/10">
         <div className="flex items-center justify-between mb-3">
           <CardTitle className="text-base font-semibold">Live Queue</CardTitle>
-          <Button variant="ghost" size="sm" onClick={refresh} className="gap-1.5 h-7 text-xs text-muted-foreground">
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={refresh}
+            className="gap-1.5 h-7 text-xs text-muted-foreground"
+          >
             <RefreshCw className="size-3" />
             Refresh
           </Button>
         </div>
-        <Tabs value={tab} onValueChange={(v) => setTab(v as TabValue)}>
+        <Tabs className="flex-col gap-0" value={tab} onValueChange={(v) => setTab(v as TabValue)}>
           <TabsList className="h-8 bg-transparent p-0 gap-0 border-b-0 rounded-none -mb-px">
             {(['all', 'waiting', 'called', 'seen', 'skipped'] as const).map((t) => (
               <TabsTrigger
@@ -158,10 +177,10 @@ export default function StaffPanel({ queue, loading, refresh }: Props) {
                             entry.status === 'called'
                               ? 'bg-sky-50/40 dark:bg-sky-950/10'
                               : entry.status === 'seen'
-                              ? 'opacity-60'
-                              : entry.status === 'skipped'
-                              ? 'opacity-70'
-                              : ''
+                                ? 'opacity-60'
+                                : entry.status === 'skipped'
+                                  ? 'opacity-70'
+                                  : ''
                           }
                         >
                           <TableCell className="font-mono text-xs pl-5 text-muted-foreground">
@@ -171,7 +190,9 @@ export default function StaffPanel({ queue, loading, refresh }: Props) {
                           <TableCell className="text-xs text-muted-foreground font-mono">
                             {entry.student_id}
                           </TableCell>
-                          <TableCell className="text-xs text-muted-foreground">{entry.reason}</TableCell>
+                          <TableCell className="text-xs text-muted-foreground">
+                            {entry.reason}
+                          </TableCell>
                           <TableCell>
                             <Badge
                               variant="outline"
@@ -186,7 +207,7 @@ export default function StaffPanel({ queue, loading, refresh }: Props) {
                           <TableCell className="text-xs text-muted-foreground">
                             <span className="flex items-center gap-1">
                               <Clock className="size-3" />
-                              {waitDuration(entry)}
+                              {waitDuration(entry, now)}
                             </span>
                           </TableCell>
                           <TableCell className="text-right pr-5">

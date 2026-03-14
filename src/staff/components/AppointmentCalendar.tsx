@@ -14,10 +14,7 @@ import { Badge } from '@/components/ui/badge';
 import { updateAppointmentStatus, cancelAppointment, type Appointment } from '@/lib/api';
 import { CheckCircle2, XCircle, CheckCheck, RefreshCw, CalendarClock } from 'lucide-react';
 
-const STATUS_BADGE: Record<
-  Appointment['status'],
-  { label: string; className: string }
-> = {
+const STATUS_BADGE: Record<Appointment['status'], { label: string; className: string }> = {
   booked: {
     label: 'Booked',
     className: 'border-neutral-300 text-neutral-600 dark:border-neutral-600 dark:text-neutral-400',
@@ -28,7 +25,8 @@ const STATUS_BADGE: Record<
   },
   completed: {
     label: 'Completed',
-    className: 'border-green-400 text-green-700 bg-green-50 dark:bg-green-950/30 dark:text-green-300',
+    className:
+      'border-green-400 text-green-700 bg-green-50 dark:bg-green-950/30 dark:text-green-300',
   },
   cancelled: {
     label: 'Cancelled',
@@ -46,7 +44,13 @@ interface Props {
   refresh: () => void;
 }
 
-export default function AppointmentCalendar({ date, appointments, loading, error, refresh }: Props) {
+export default function AppointmentCalendar({
+  date,
+  appointments,
+  loading,
+  error,
+  refresh,
+}: Props) {
   const [tab, setTab] = useState<TabValue>('all');
 
   async function handleAction(id: number, action: 'confirm' | 'complete' | 'cancel') {
@@ -78,7 +82,9 @@ export default function AppointmentCalendar({ date, appointments, loading, error
   if (loading && appointments.length === 0) {
     return (
       <Card>
-        <CardContent className="py-10 text-center text-sm text-muted-foreground">Loading…</CardContent>
+        <CardContent className="py-10 text-center text-sm text-muted-foreground">
+          Loading…
+        </CardContent>
       </Card>
     );
   }
@@ -118,7 +124,7 @@ export default function AppointmentCalendar({ date, appointments, loading, error
           </Button>
         </div>
 
-        <Tabs value={tab} onValueChange={(v) => setTab(v as TabValue)}>
+        <Tabs className="flex-col gap-0" value={tab} onValueChange={(v) => setTab(v as TabValue)}>
           <TabsList className="h-8 bg-transparent p-0 gap-0 border-b-0 rounded-none -mb-px">
             {(['all', 'booked', 'confirmed', 'completed', 'cancelled'] as const).map((t) => (
               <TabsTrigger
@@ -162,10 +168,10 @@ export default function AppointmentCalendar({ date, appointments, loading, error
                             appt.status === 'cancelled'
                               ? 'opacity-50 line-through-cells'
                               : appt.status === 'completed'
-                              ? 'opacity-60'
-                              : appt.status === 'confirmed'
-                              ? 'bg-sky-50/30 dark:bg-sky-950/10'
-                              : ''
+                                ? 'opacity-60'
+                                : appt.status === 'confirmed'
+                                  ? 'bg-sky-50/30 dark:bg-sky-950/10'
+                                  : ''
                           }
                         >
                           <TableCell className="font-mono text-sm font-semibold pl-5">
@@ -175,7 +181,9 @@ export default function AppointmentCalendar({ date, appointments, loading, error
                           <TableCell className="text-xs text-muted-foreground font-mono">
                             {appt.student_id}
                           </TableCell>
-                          <TableCell className="text-xs text-muted-foreground">{appt.reason}</TableCell>
+                          <TableCell className="text-xs text-muted-foreground">
+                            {appt.reason}
+                          </TableCell>
                           <TableCell>
                             <Badge
                               variant="outline"
