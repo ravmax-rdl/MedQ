@@ -1,11 +1,23 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
 import AppointmentForm from '../components/AppointmentForm';
+import StudentHeader from '../components/StudentHeader';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import { CheckCircle } from 'lucide-react';
-import { toggleTheme, getTheme } from '@/lib/theme';
-import { Moon, Sun } from 'lucide-react';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Badge } from '@/components/ui/badge';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { getMyAppointments, type Appointment } from '@/lib/api';
+import {
+  CheckCircle2,
+  Search,
+  Clock,
+  CalendarDays,
+  ArrowRight,
+  Loader2,
+  ArrowLeft,
+} from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 interface Confirmed {
   date: string;
@@ -13,14 +25,153 @@ interface Confirmed {
   name: string;
 }
 
+const STATUS_CONFIG: Record<Appointment['status'], { label: string; className: string }> = {
+  booked: {
+    label: 'Booked',
+    className: 'border-neutral-300 text-neutral-600 dark:border-neutral-600 dark:text-neutral-400',
+  },
+  confirmed: {
+    label: 'Confirmed',
+    className:
+      'border-sky-400 bg-sky-50 text-sky-700 dark:border-sky-600 dark:bg-sky-950/30 dark:text-sky-300',
+  },
+  completed: {
+    label: 'Completed',
+    className:
+      'border-green-400 bg-green-50 text-green-700 dark:border-green-700 dark:bg-green-950/30 dark:text-green-300',
+  },
+  cancelled: {
+    label: 'Cancelled',
+    className:
+      'border-red-300 bg-red-50 text-red-600 dark:border-red-800 dark:bg-red-950/30 dark:text-red-400',
+  },
+};
+
+function formatDate(dateStr: string) {
+  return new Date(dateStr + 'T00:00:00').toLocaleDateString(undefined, {
+    weekday: 'long',
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+  });
+}
+
+function AppointmentLookup() {
+  const [sid, setSid] = useState('');
+  const [results, setResults] = useState<Appointment[] | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  async function handleSearch(e: React.FormEvent) {
+    e.preventDefault();
+    if (!sid.trim()) return;
+    setError(null);
+    setLoading(true);
+    try {
+      const data = await getMyAppointments(sid.trim());
+      setResults(data);
+    } catch {
+      setError('Failed to look up appointments. Please try again.');
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  return (
+    <div className="w-full max-w-lg flex flex-col gap-4">
+      <Card className="shadow-sm">
+        <CardContent className="pt-5 pb-5">
+          <form onSubmit={handleSearch} className="flex flex-col gap-4">
+            <div className="flex flex-col gap-2">
+              <Label htmlFor="lookup-sid">Student ID</Label>
+              <div className="flex gap-2">
+                <Input
+                  id="lookup-sid"
+                  placeholder="e.g. S12345678"
+                  value={sid}
+                  onChange={(e) => setSid(e.target.value)}
+                  autoComplete="off"
+                  className="flex-1"
+                />
+                <Button
+                  type="submit"
+                  disabled={loading || !sid.trim()}
+                  className="shrink-0 bg-sky-600 hover:bg-sky-700 dark:bg-sky-500 dark:hover:bg-sky-600 text-white"
+                >
+                  {loading ? (
+                    <Loader2 className="size-4 animate-spin" />
+                  ) : (
+                    <>
+                      <Search className="size-4 mr-1.5" />
+                      Look up
+                    </>
+                  )}
+                </Button>
+              </div>
+              <p className="text-xs text-muted-foreground">
+                Shows upcoming and today's appointments for your student ID.
+              </p>
+            </div>
+            {error && (
+              <p className="text-sm text-destructive bg-destructive/10 rounded-md px-3 py-2">
+                {error}
+              </p>
+            )}
+          </form>
+        </CardContent>
+      </Card>
+
+      {results !== null && (
+        <div className="flex flex-col gap-2">
+          {results.length === 0 ? (
+            <Card>
+              <CardContent className="py-10 text-center text-sm text-muted-foreground">
+                No upcoming appointments found for <strong>{sid}</strong>.
+              </CardContent>
+            </Card>
+          ) : (
+            results.map((appt) => (
+              <Card key={appt.id} className="shadow-sm overflow-hidden">
+                <CardContent className="py-4 px-4">
+                  <div className="flex items-start justify-between gap-3">
+                    <div className="flex items-start gap-3">
+                      <div className="rounded-lg bg-muted/60 p-2 shrink-0 mt-0.5">
+                        <CalendarDays className="size-4 text-sky-500" />
+                      </div>
+                      <div className="flex flex-col gap-0.5">
+                        <p className="text-sm font-semibold">{appt.name}</p>
+                        <p className="text-xs text-muted-foreground">{formatDate(appt.date)}</p>
+                        <div className="flex items-center gap-1.5 mt-1">
+                          <Clock className="size-3 text-muted-foreground" />
+                          <span className="text-xs font-mono font-medium">{appt.time_slot}</span>
+                          <span className="text-muted-foreground text-xs">·</span>
+                          <span className="text-xs text-muted-foreground">{appt.reason}</span>
+                        </div>
+                        {appt.notes && (
+                          <p className="text-xs text-muted-foreground italic mt-1">{appt.notes}</p>
+                        )}
+                      </div>
+                    </div>
+                    <Badge
+                      variant="outline"
+                      className={`shrink-0 text-xs rounded-sm ${STATUS_CONFIG[appt.status].className}`}
+                    >
+                      {STATUS_CONFIG[appt.status].label}
+                    </Badge>
+                  </div>
+                </CardContent>
+              </Card>
+            ))
+          )}
+        </div>
+      )}
+    </div>
+  );
+}
+
 export default function Appointments() {
   const [confirmed, setConfirmed] = useState<Confirmed | null>(null);
-  const [theme, setTheme] = useState(getTheme);
-
-  function handleThemeToggle() {
-    const next = toggleTheme();
-    setTheme(next);
-  }
+  const [activeTab, setActiveTab] = useState('book');
 
   function handleBooked(data: Confirmed) {
     setConfirmed(data);
@@ -32,67 +183,104 @@ export default function Appointments() {
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
-      {/* Header */}
-      <header className="border-b border-border px-6 py-3 flex items-center justify-between">
-        <div className="flex items-center gap-3">
-          <img
-            src={theme === 'dark' ? '/white.svg' : '/black.svg'}
-            alt="MedQ"
-            className="h-6"
-          />
-          <span className="text-sm font-medium">MedQ</span>
-        </div>
-        <nav className="flex items-center gap-4">
-          <Link
-            to="/"
-            className="text-sm text-muted-foreground hover:text-foreground transition-colors"
-          >
-            Walk-in Queue
-          </Link>
-          <Link
-            to="/staff/login"
-            className="text-sm text-muted-foreground hover:text-foreground transition-colors"
-          >
-            Staff Login
-          </Link>
-          <Button variant="ghost" size="icon-sm" onClick={handleThemeToggle} aria-label="Toggle theme">
-            {theme === 'dark' ? <Sun className="size-4" /> : <Moon className="size-4" />}
-          </Button>
-        </nav>
-      </header>
+      <StudentHeader />
 
-      {/* Main content */}
-      <main className="flex-1 flex flex-col items-center justify-start px-4 pt-12 pb-16 gap-8">
-        <div className="text-center max-w-md">
-          <p className="text-xs uppercase tracking-widest text-muted-foreground mb-2">
-            University Health Clinic
-          </p>
-          <h1 className="text-3xl font-semibold tracking-tight">Appointments</h1>
+      <main className="flex-1 flex flex-col items-center px-5 pt-10 pb-16 gap-8 sm:px-8">
+        {/* Page hero */}
+        <div className="w-full max-w-lg text-center">
+          <div className="w-full max-w-2xl">
+            <Link
+              to="/"
+              className="inline-flex items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground mb-5 transition-colors"
+            >
+              <ArrowLeft className="size-3" />
+              Back to home
+            </Link>
+            <p className="text-xs uppercase tracking-widest text-muted-foreground mb-1">
+              University Health Clinic
+            </p>
+          </div>
+          <h1 className="text-2xl font-bold tracking-tight sm:text-3xl">Appointments</h1>
           <p className="mt-2 text-sm text-muted-foreground">
-            Book a time slot in advance for your clinic visit.
+            Book a time slot in advance or check the status of your existing appointment.
           </p>
         </div>
 
+        {/* Booking confirmation */}
         {confirmed ? (
-          <Card className="w-full max-w-md">
-            <CardContent className="py-10 flex flex-col items-center gap-4 text-center">
-              <CheckCircle className="size-10 text-green-500" />
-              <div>
-                <p className="font-semibold text-lg">Appointment Confirmed</p>
-                <p className="text-sm text-muted-foreground mt-1">
-                  {confirmed.name} · {confirmed.date} at {confirmed.time_slot}
-                </p>
-                <p className="text-sm text-muted-foreground mt-0.5">
-                  Please arrive 5 minutes before your scheduled time.
-                </p>
+          <Card className="w-full max-w-lg shadow-sm overflow-hidden">
+            <div className="h-1.5 bg-gradient-to-r from-sky-400 to-emerald-400" />
+            <CardContent className="py-10 flex flex-col items-center gap-5 text-center px-8">
+              <div className="flex items-center justify-center size-14 rounded-full bg-green-100 dark:bg-green-950/40">
+                <CheckCircle2 className="size-7 text-green-600 dark:text-green-400" />
               </div>
-              <Button variant="outline" onClick={handleBookAnother} className="mt-2">
-                Book Another Appointment
-              </Button>
+              <div className="flex flex-col gap-1">
+                <p className="font-bold text-xl">Appointment Confirmed</p>
+                <p className="text-muted-foreground text-sm">{confirmed.name}</p>
+              </div>
+              <div className="w-full rounded-lg bg-muted/50 dark:bg-muted/20 border border-border/60 px-5 py-4 flex flex-col gap-3 text-sm">
+                <div className="flex items-center justify-between">
+                  <span className="text-muted-foreground flex items-center gap-1.5">
+                    <CalendarDays className="size-3.5" />
+                    Date
+                  </span>
+                  <span className="font-medium">
+                    {new Date(confirmed.date + 'T00:00:00').toLocaleDateString(undefined, {
+                      weekday: 'long',
+                      month: 'long',
+                      day: 'numeric',
+                    })}
+                  </span>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-muted-foreground flex items-center gap-1.5">
+                    <Clock className="size-3.5" />
+                    Time
+                  </span>
+                  <span className="font-mono font-semibold text-base">{confirmed.time_slot}</span>
+                </div>
+              </div>
+              <p className="text-xs text-muted-foreground">
+                Please arrive 5 minutes before your scheduled time.
+              </p>
+              <div className="flex flex-col gap-2 w-full">
+                <Button variant="outline" onClick={handleBookAnother} className="w-full">
+                  Book Another Appointment
+                </Button>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="text-muted-foreground"
+                  onClick={() => {
+                    setConfirmed(null);
+                    setActiveTab('check');
+                  }}
+                >
+                  Check my appointments
+                  <ArrowRight className="size-3.5 ml-1" />
+                </Button>
+              </div>
             </CardContent>
           </Card>
         ) : (
-          <AppointmentForm onBooked={handleBooked} />
+          <Tabs
+            value={activeTab}
+            onValueChange={setActiveTab}
+            className="w-full max-w-lg flex flex-col items-center gap-4"
+          >
+            <TabsList className="grid w-full grid-cols-2 max-w-xs">
+              <TabsTrigger value="book">Book</TabsTrigger>
+              <TabsTrigger value="check">Check Status</TabsTrigger>
+            </TabsList>
+
+            <TabsContent value="book" className="w-full mt-0">
+              <AppointmentForm onBooked={handleBooked} />
+            </TabsContent>
+
+            <TabsContent value="check" className="w-full mt-0 flex flex-col items-center">
+              <AppointmentLookup />
+            </TabsContent>
+          </Tabs>
         )}
       </main>
     </div>

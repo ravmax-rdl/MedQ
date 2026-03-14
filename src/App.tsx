@@ -1,5 +1,6 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import StudentHome from './student/pages/StudentHome';
+import QueuePage from './student/pages/QueuePage';
 import Appointments from './student/pages/Appointments';
 import StaffLogin from './staff/pages/StaffLogin';
 import StaffDashboard from './staff/pages/StaffDashboard';
@@ -11,6 +12,7 @@ export default function App() {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<StudentHome />} />
+        <Route path="/queue" element={<QueuePage />} />
         <Route path="/appointments" element={<Appointments />} />
         <Route path="/staff/login" element={<StaffLogin />} />
         <Route

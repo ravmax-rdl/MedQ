@@ -21,9 +21,7 @@ export default function AppointmentList({ appointments, title = 'Your Appointmen
       </CardHeader>
       <CardContent>
         {appointments.length === 0 ? (
-          <p className="text-sm text-muted-foreground text-center py-6">
-            No appointments found.
-          </p>
+          <p className="text-sm text-muted-foreground text-center py-6">No appointments found.</p>
         ) : (
           <div className="flex flex-col divide-y divide-border">
             {appointments.map((appt) => (
@@ -38,7 +36,7 @@ export default function AppointmentList({ appointments, title = 'Your Appointmen
                   )}
                 </div>
                 <span
-                  className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium shrink-0 ${STATUS_STYLE[appt.status]}`}
+                  className={`inline-flex items-center rounded-none px-2 py-0.5 text-xs font-medium shrink-0 ${STATUS_STYLE[appt.status]}`}
                 >
                   {appt.status}
                 </span>

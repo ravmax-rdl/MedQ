@@ -7,15 +7,17 @@ interface Props {
 
 export default function WaitEstimate({ estimatedWaitMins, position }: Props) {
   return (
-    <div className="flex items-center gap-2 text-sm text-muted-foreground">
-      <Clock className="size-4 shrink-0" />
+    <div className="flex items-center gap-1.5 text-sm text-muted-foreground">
+      <Clock className="size-3.5 shrink-0 text-sky-500" />
       {estimatedWaitMins != null ? (
         <span>
-          Estimated wait: <strong className="text-foreground">~{estimatedWaitMins} min</strong>
+          Est. wait{' '}
+          <strong className="text-foreground font-semibold">~{estimatedWaitMins} min</strong>
         </span>
       ) : (
         <span>
-          You are position <strong className="text-foreground">#{position}</strong> in the queue
+          Position{' '}
+          <strong className="text-foreground font-semibold">#{position}</strong> in queue
         </span>
       )}
     </div>

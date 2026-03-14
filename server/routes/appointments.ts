@@ -9,6 +9,20 @@ const ALL_SLOTS = [
   '15:00', '15:30', '16:00',
 ];
 
+router.get('/mine', (req, res) => {
+  const { student_id } = req.query as { student_id?: string };
+  if (!student_id) {
+    res.status(400).json({ error: 'student_id is required' });
+    return;
+  }
+  const appointments = db
+    .prepare(
+      `SELECT * FROM appointments WHERE student_id = ? AND date >= date('now') ORDER BY date ASC, time_slot ASC`
+    )
+    .all(student_id);
+  res.json(appointments);
+});
+
 router.get('/slots', (req, res) => {
   const { date } = req.query as { date?: string };
 

@@ -1,95 +1,106 @@
 import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { SidebarProvider, SidebarInset, SidebarTrigger } from '@/components/ui/sidebar';
+import { Separator } from '@/components/ui/separator';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
+import { AppSidebar } from '../components/AppSidebar';
 import AppointmentCalendar from '../components/AppointmentCalendar';
-import { useAuth } from '@/hooks/useAuth';
-import { toggleTheme, getTheme } from '@/lib/theme';
-import { Moon, Sun, LogOut } from 'lucide-react';
+import { ChevronLeft, ChevronRight, CalendarDays } from 'lucide-react';
 
 function todayStr(): string {
-  return new Date().toISOString().slice(0, 10);
+  const now = new Date();
+  const year = now.getFullYear();
+  const month = String(now.getMonth() + 1).padStart(2, '0');
+  const day = String(now.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
+}
+
+function offsetDate(base: string, days: number): string {
+  const [year, month, day] = base.split('-').map(Number);
+  const d = new Date(year, month - 1, day);
+  d.setDate(d.getDate() + days);
+
+  const nextYear = d.getFullYear();
+  const nextMonth = String(d.getMonth() + 1).padStart(2, '0');
+  const nextDay = String(d.getDate()).padStart(2, '0');
+  return `${nextYear}-${nextMonth}-${nextDay}`;
 }
 
 export default function StaffAppointments() {
-  const { logout } = useAuth();
-  const navigate = useNavigate();
-  const [theme, setTheme] = useState(getTheme);
   const [date, setDate] = useState(todayStr);
 
-  function handleThemeToggle() {
-    const next = toggleTheme();
-    setTheme(next);
-  }
-
-  async function handleLogout() {
-    await logout();
-    navigate('/staff/login', { replace: true });
-  }
+  const isToday = date === todayStr();
 
   return (
-    <div className="min-h-screen bg-background flex flex-col">
-      {/* Header */}
-      <header className="border-b border-border px-6 py-3 flex items-center justify-between">
-        <div className="flex items-center gap-4">
-          <div className="flex items-center gap-3">
-            <img
-              src={theme === 'dark' ? '/white.svg' : '/black.svg'}
-              alt="MedQ"
-              className="h-6"
-            />
-            <span className="text-sm font-medium">MedQ Staff</span>
-          </div>
-          <nav className="flex items-center gap-1 ml-4">
-            <Link
-              to="/staff"
-              className="px-3 py-1 rounded-md text-sm text-muted-foreground hover:text-foreground transition-colors"
-            >
-              Queue
-            </Link>
-            <Link
-              to="/staff/appointments"
-              className="px-3 py-1 rounded-md text-sm font-medium bg-muted text-foreground"
-            >
-              Appointments
-            </Link>
+    <SidebarProvider>
+      <AppSidebar />
+      <SidebarInset>
+        <header className="flex h-12 shrink-0 items-center gap-2 border-b px-4">
+          <SidebarTrigger className="-ml-1" />
+          <Separator orientation="vertical" className="h-4" />
+          <nav className="flex items-center gap-1 text-sm text-muted-foreground">
+            <span>Staff</span>
+            <span>/</span>
+            <span className="text-foreground font-medium">Appointments</span>
           </nav>
-        </div>
-        <div className="flex items-center gap-2">
-          <Button variant="ghost" size="icon-sm" onClick={handleThemeToggle} aria-label="Toggle theme">
-            {theme === 'dark' ? <Sun className="size-4" /> : <Moon className="size-4" />}
-          </Button>
-          <Button variant="ghost" size="sm" onClick={handleLogout} className="gap-1.5">
-            <LogOut className="size-3.5" />
-            Sign Out
-          </Button>
-        </div>
-      </header>
+        </header>
 
-      {/* Main */}
-      <main className="flex-1 px-6 py-8 flex flex-col gap-6 max-w-6xl mx-auto w-full">
-        <div className="flex items-end justify-between gap-4 flex-wrap">
-          <div>
-            <h1 className="text-xl font-semibold tracking-tight mb-1">Appointments</h1>
-            <p className="text-sm text-muted-foreground">Manage daily appointment schedule</p>
-          </div>
-          <div className="flex items-center gap-2">
-            <Label htmlFor="appt-date" className="text-sm shrink-0">
-              Date
-            </Label>
-            <Input
-              id="appt-date"
-              type="date"
-              value={date}
-              onChange={(e) => setDate(e.target.value)}
-              className="w-40"
-            />
-          </div>
-        </div>
+        <div className="flex flex-col gap-6 p-6">
+          <div className="flex items-end justify-between gap-4 flex-wrap">
+            <div>
+              <h1 className="text-xl font-semibold tracking-tight">Appointments</h1>
+              <p className="text-sm text-muted-foreground mt-0.5">
+                Manage the daily appointment schedule
+              </p>
+            </div>
 
-        <AppointmentCalendar date={date} />
-      </main>
-    </div>
+            <div className="flex items-center gap-2">
+              <Button
+                variant="outline"
+                size="icon"
+                className="size-8"
+                onClick={() => setDate((d) => offsetDate(d, -1))}
+                aria-label="Previous day"
+              >
+                <ChevronLeft className="size-4" />
+              </Button>
+
+              <div className="flex items-center gap-2 rounded-md border border-border px-3 h-8 text-sm min-w-40 justify-center">
+                <CalendarDays className="size-3.5 text-muted-foreground" />
+                <input
+                  type="date"
+                  value={date}
+                  onChange={(e) => setDate(e.target.value)}
+                  className="bg-transparent text-sm outline-none cursor-pointer text-center tabular-nums"
+                  aria-label="Select date"
+                />
+              </div>
+
+              <Button
+                variant="outline"
+                size="icon"
+                className="size-8"
+                onClick={() => setDate((d) => offsetDate(d, 1))}
+                aria-label="Next day"
+              >
+                <ChevronRight className="size-4" />
+              </Button>
+
+              {!isToday && (
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="h-8 text-xs"
+                  onClick={() => setDate(todayStr())}
+                >
+                  Today
+                </Button>
+              )}
+            </div>
+          </div>
+
+          <AppointmentCalendar date={date} />
+        </div>
+      </SidebarInset>
+    </SidebarProvider>
   );
 }

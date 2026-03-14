@@ -23,12 +23,10 @@ function getAvgWait(): number | null {
   return row?.avg ?? null;
 }
 
-router.get('/', (_req, res) => {
-  const entries = db
-    .prepare(
-      `SELECT * FROM queue WHERE status = 'waiting' ORDER BY position ASC`
-    )
-    .all() as Array<{
+router.get('/', (req, res) => {
+  const showAll = req.query.all === 'true';
+
+  type QueueRow = {
     id: number;
     name: string;
     student_id: string;
@@ -38,16 +36,42 @@ router.get('/', (_req, res) => {
     joined_at: string;
     called_at: string | null;
     seen_at: string | null;
-  }>;
+  };
+
+  const entries = showAll
+    ? (db
+        .prepare(`SELECT * FROM queue WHERE date(joined_at) = date('now') ORDER BY joined_at ASC`)
+        .all() as QueueRow[])
+    : (db
+        .prepare(`SELECT * FROM queue WHERE status = 'waiting' ORDER BY position ASC`)
+        .all() as QueueRow[]);
 
   const avg = getAvgWait();
 
   const result = entries.map((e) => ({
     ...e,
-    estimated_wait_mins: avg ? Math.round(avg * e.position) : null,
+    estimated_wait_mins: e.status === 'waiting' && avg ? Math.round(avg * e.position) : null,
   }));
 
   res.json(result);
+});
+
+router.get('/:id', (req, res) => {
+  const { id } = req.params;
+  const entry = db.prepare(`SELECT * FROM queue WHERE id = ?`).get(id) as
+    | { id: number; name: string; student_id: string; reason: string; status: string; position: number; joined_at: string; called_at: string | null; seen_at: string | null }
+    | undefined;
+
+  if (!entry) {
+    res.status(404).json({ error: 'Not found' });
+    return;
+  }
+
+  const avg = getAvgWait();
+  res.json({
+    ...entry,
+    estimated_wait_mins: entry.status === 'waiting' && avg ? Math.round(avg * entry.position) : null,
+  });
 });
 
 router.post('/', (req, res) => {

@@ -26,7 +26,7 @@ router.patch('/:id', requireAuth, (req, res) => {
   }
 
   const entry = db.prepare(`SELECT * FROM queue WHERE id = ?`).get(id) as
-    | { id: number; joined_at: string; status: string }
+    | { id: number; joined_at: string; called_at: string | null; status: string }
     | undefined;
 
   if (!entry) {
@@ -35,7 +35,15 @@ router.patch('/:id', requireAuth, (req, res) => {
   }
 
   if (status === 'seen') {
-    const durationMins = (Date.now() - new Date(entry.joined_at).getTime()) / 60000;
+    // Log the per-patient service time (called_at → now) so the position-based
+    // wait estimate stays accurate. Fall back to joined_at only if never called.
+    // SQLite stores datetime('now') as "YYYY-MM-DD HH:MM:SS" (UTC, no zone marker).
+    // Appending 'Z' after normalising the separator forces correct UTC parsing.
+    const parseUtc = (s: string) => new Date(s.replace(' ', 'T') + 'Z');
+    const serviceStartMs = entry.called_at
+      ? parseUtc(entry.called_at).getTime()
+      : parseUtc(entry.joined_at).getTime();
+    const durationMins = (Date.now() - serviceStartMs) / 60000;
     db.prepare(`INSERT INTO session_log (duration_mins) VALUES (?)`).run(durationMins);
     db.prepare(
       `UPDATE queue SET status = ?, seen_at = datetime('now') WHERE id = ?`

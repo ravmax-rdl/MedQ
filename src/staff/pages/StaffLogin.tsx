@@ -34,13 +34,13 @@ export default function StaffLogin() {
   }
 
   return (
-    <div className="min-h-screen bg-background flex flex-col items-center justify-center px-4">
-      <div className="w-full max-w-sm flex flex-col gap-6">
+    <div className="min-h-screen bg-background flex flex-col items-center justify-center px-6 py-10 sm:px-8">
+      <div className="w-full max-w-md flex flex-col gap-7">
         <div className="text-center">
           <p className="text-xs uppercase tracking-widest text-muted-foreground mb-2">
             University Health Clinic
           </p>
-          <h1 className="text-2xl font-semibold tracking-tight">Staff Access</h1>
+          <h1 className="text-2xl font-semibold tracking-tight sm:text-3xl">Staff Access</h1>
         </div>
 
         <Card>
@@ -49,8 +49,8 @@ export default function StaffLogin() {
             <CardDescription>Enter your staff credentials to continue.</CardDescription>
           </CardHeader>
           <CardContent>
-            <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-              <div className="flex flex-col gap-1.5">
+            <form onSubmit={handleSubmit} className="flex flex-col gap-5">
+              <div className="flex flex-col gap-2">
                 <Label htmlFor="username">Username</Label>
                 <Input
                   id="username"
@@ -60,7 +60,7 @@ export default function StaffLogin() {
                   required
                 />
               </div>
-              <div className="flex flex-col gap-1.5">
+              <div className="flex flex-col gap-2">
                 <Label htmlFor="password">Password</Label>
                 <Input
                   id="password"
@@ -72,7 +72,7 @@ export default function StaffLogin() {
                 />
               </div>
               {error && <p className="text-sm text-destructive">{error}</p>}
-              <Button type="submit" disabled={loading} className="mt-1">
+              <Button type="submit" disabled={loading} className="mt-2">
                 {loading ? 'Signing in…' : 'Sign In'}
               </Button>
             </form>
@@ -80,7 +80,10 @@ export default function StaffLogin() {
         </Card>
 
         <p className="text-center text-sm text-muted-foreground">
-          <Link to="/" className="hover:text-foreground transition-colors underline underline-offset-2">
+          <Link
+            to="/"
+            className="hover:text-foreground transition-colors underline underline-offset-2"
+          >
             ← Back to student queue
           </Link>
         </p>
