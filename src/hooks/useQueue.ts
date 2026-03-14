@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { getQueue, type QueueEntry } from '@/lib/api';
+import { getQueue, getFullQueue, type QueueEntry } from '@/lib/api';
 
 export function useQueue() {
   const [queue, setQueue] = useState<QueueEntry[]>([]);
@@ -25,4 +25,24 @@ export function useQueue() {
   }, [refresh]);
 
   return { queue, loading, error, refresh };
+}
+
+export function useFullQueue(date: string) {
+  const [queue, setQueue] = useState<QueueEntry[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  const refresh = useCallback(() => {
+    getFullQueue(date)
+      .then((data) => { setQueue(data); setLoading(false); })
+      .catch(() => setLoading(false));
+  }, [date]);
+
+  useEffect(() => {
+    setLoading(true);
+    refresh();
+    const interval = setInterval(refresh, 2000);
+    return () => clearInterval(interval);
+  }, [refresh]);
+
+  return { queue, loading, refresh };
 }

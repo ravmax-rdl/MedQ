@@ -57,8 +57,9 @@ export async function getQueue(): Promise<QueueEntry[]> {
   return handleResponse(res);
 }
 
-export async function getFullQueue(): Promise<QueueEntry[]> {
-  const res = await fetch(`${BASE}/queue?all=true`);
+export async function getFullQueue(date?: string): Promise<QueueEntry[]> {
+  const params = date ? `?all=true&date=${encodeURIComponent(date)}` : '?all=true';
+  const res = await fetch(`${BASE}/queue${params}`);
   return handleResponse(res);
 }
 
@@ -185,8 +186,9 @@ export interface Stats {
   appointments_today: number;
 }
 
-export async function getStats(): Promise<Stats> {
-  const res = await fetch(`${BASE}/stats`, {
+export async function getStats(date?: string): Promise<Stats> {
+  const params = date ? `?date=${encodeURIComponent(date)}` : '';
+  const res = await fetch(`${BASE}/stats${params}`, {
     headers: { ...authHeaders() },
   });
   return handleResponse(res);

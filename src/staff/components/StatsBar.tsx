@@ -1,21 +1,12 @@
-import { useEffect, useState } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
-import { getStats, type Stats } from '@/lib/api';
+import type { Stats } from '@/lib/api';
 import { Users, Clock, CalendarDays, Activity, TrendingUp } from 'lucide-react';
 
-export default function StatsBar() {
-  const [stats, setStats] = useState<Stats | null>(null);
+interface Props {
+  stats: Stats | null;
+}
 
-  useEffect(() => {
-    function load() {
-      getStats()
-        .then(setStats)
-        .catch(() => {});
-    }
-    load();
-    const interval = setInterval(load, 5000);
-    return () => clearInterval(interval);
-  }, []);
+export default function StatsBar({ stats }: Props) {
 
   const items = [
     {

@@ -25,6 +25,7 @@ function getAvgWait(): number | null {
 
 router.get('/', (req, res) => {
   const showAll = req.query.all === 'true';
+  const dateParam = req.query.date as string | undefined;
 
   type QueueRow = {
     id: number;
@@ -39,9 +40,13 @@ router.get('/', (req, res) => {
   };
 
   const entries = showAll
-    ? (db
-        .prepare(`SELECT * FROM queue WHERE date(joined_at) = date('now') ORDER BY joined_at ASC`)
-        .all() as QueueRow[])
+    ? dateParam
+      ? (db
+          .prepare(`SELECT * FROM queue WHERE date(joined_at) = ? ORDER BY joined_at ASC`)
+          .all(dateParam) as QueueRow[])
+      : (db
+          .prepare(`SELECT * FROM queue WHERE date(joined_at) = date('now') ORDER BY joined_at ASC`)
+          .all() as QueueRow[])
     : (db
         .prepare(`SELECT * FROM queue WHERE status = 'waiting' ORDER BY position ASC`)
         .all() as QueueRow[]);

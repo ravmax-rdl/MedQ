@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { Bar, BarChart, Cell, XAxis, YAxis } from 'recharts';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import {
@@ -7,7 +6,7 @@ import {
   ChartTooltipContent,
   type ChartConfig,
 } from '@/components/ui/chart';
-import { getFullQueue } from '@/lib/api';
+import type { QueueEntry } from '@/lib/api';
 
 const STATUS_COLORS: Record<string, string> = {
   waiting: 'var(--chart-3)',
@@ -24,40 +23,22 @@ const chartConfig = {
   skipped: { label: 'Skipped', color: 'var(--chart-5)' },
 } satisfies ChartConfig;
 
-export function QueueStatusChart() {
-  const [chartData, setChartData] = React.useState([
-    { status: 'Waiting', count: 0, key: 'waiting' },
-    { status: 'Called', count: 0, key: 'called' },
-    { status: 'Seen', count: 0, key: 'seen' },
-    { status: 'Skipped', count: 0, key: 'skipped' },
-  ]);
+interface Props {
+  queue: QueueEntry[];
+}
 
-  React.useEffect(() => {
-    function load() {
-      getFullQueue()
-        .then((entries) => {
-          const counts: Record<string, number> = {
-            waiting: 0,
-            called: 0,
-            seen: 0,
-            skipped: 0,
-          };
-          entries.forEach((e) => {
-            if (e.status in counts) counts[e.status]++;
-          });
-          setChartData([
-            { status: 'Waiting', count: counts.waiting, key: 'waiting' },
-            { status: 'Called', count: counts.called, key: 'called' },
-            { status: 'Seen', count: counts.seen, key: 'seen' },
-            { status: 'Skipped', count: counts.skipped, key: 'skipped' },
-          ]);
-        })
-        .catch(() => {});
-    }
-    load();
-    const interval = setInterval(load, 5000);
-    return () => clearInterval(interval);
-  }, []);
+export function QueueStatusChart({ queue }: Props) {
+  const counts = { waiting: 0, called: 0, seen: 0, skipped: 0 };
+  queue.forEach((e) => {
+    if (e.status in counts) counts[e.status as keyof typeof counts]++;
+  });
+
+  const chartData = [
+    { status: 'Waiting', count: counts.waiting, key: 'waiting' },
+    { status: 'Called', count: counts.called, key: 'called' },
+    { status: 'Seen', count: counts.seen, key: 'seen' },
+    { status: 'Skipped', count: counts.skipped, key: 'skipped' },
+  ];
 
   return (
     <Card>

@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback } from 'react';
+import { useState } from 'react';
 import { parseDbDate } from '@/lib/utils';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -12,7 +12,7 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
-import { getFullQueue, updateQueueStatus, removeFromQueue, type QueueEntry } from '@/lib/api';
+import { updateQueueStatus, removeFromQueue, type QueueEntry } from '@/lib/api';
 import { Clock, Phone, Eye, SkipForward, Trash2, RefreshCw } from 'lucide-react';
 
 const STATUS_BADGE: Record<QueueEntry['status'], { label: string; variant: string; className: string }> = {
@@ -40,25 +40,14 @@ const STATUS_BADGE: Record<QueueEntry['status'], { label: string; variant: strin
 
 type TabValue = 'all' | QueueEntry['status'];
 
-export default function StaffPanel() {
-  const [queue, setQueue] = useState<QueueEntry[]>([]);
-  const [loading, setLoading] = useState(true);
+interface Props {
+  queue: QueueEntry[];
+  loading: boolean;
+  refresh: () => void;
+}
+
+export default function StaffPanel({ queue, loading, refresh }: Props) {
   const [tab, setTab] = useState<TabValue>('all');
-
-  const refresh = useCallback(() => {
-    getFullQueue()
-      .then((data) => {
-        setQueue(data);
-        setLoading(false);
-      })
-      .catch(() => setLoading(false));
-  }, []);
-
-  useEffect(() => {
-    refresh();
-    const interval = setInterval(refresh, 2000);
-    return () => clearInterval(interval);
-  }, [refresh]);
 
   async function handleAction(id: number, action: 'call' | 'seen' | 'skip' | 'requeue' | 'remove') {
     try {
