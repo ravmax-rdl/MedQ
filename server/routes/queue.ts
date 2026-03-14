@@ -56,6 +56,34 @@ router.get('/', (req, res) => {
   res.json(result);
 });
 
+router.get('/mine', (req, res) => {
+  const { student_id } = req.query as { student_id?: string };
+  if (!student_id) {
+    res.status(400).json({ error: 'student_id is required' });
+    return;
+  }
+
+  type QueueRow = {
+    id: number; name: string; student_id: string; reason: string;
+    status: string; position: number; joined_at: string;
+    called_at: string | null; seen_at: string | null;
+  };
+
+  const entries = db
+    .prepare(
+      `SELECT * FROM queue WHERE student_id = ? AND date(joined_at) = date('now') ORDER BY joined_at DESC`
+    )
+    .all(student_id) as QueueRow[];
+
+  const avg = getAvgWait();
+  const result = entries.map((e) => ({
+    ...e,
+    estimated_wait_mins: e.status === 'waiting' && avg ? Math.round(avg * e.position) : null,
+  }));
+
+  res.json(result);
+});
+
 router.get('/:id', (req, res) => {
   const { id } = req.params;
   const entry = db.prepare(`SELECT * FROM queue WHERE id = ?`).get(id) as

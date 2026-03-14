@@ -81,6 +81,11 @@ export async function joinQueue(data: {
   return handleResponse(res);
 }
 
+export async function getMyQueueEntries(studentId: string): Promise<QueueEntry[]> {
+  const res = await fetch(`${BASE}/queue/mine?student_id=${encodeURIComponent(studentId)}`);
+  return handleResponse(res);
+}
+
 export async function leaveQueue(id: number): Promise<void> {
   const res = await fetch(`${BASE}/queue/${id}/leave`, { method: 'DELETE' });
   return handleResponse(res);
