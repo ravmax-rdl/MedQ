@@ -198,6 +198,7 @@ export interface DailyStats {
   date: string;
   queue_total: number;
   queue_seen: number;
+  queue_skipped: number;
   appointments: number;
   appointments_completed: number;
 }

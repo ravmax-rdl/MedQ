@@ -132,7 +132,7 @@ export default function AppointmentForm({ onBooked }: Props) {
   const today = fromDateString(todayStr());
 
   return (
-    <Card className="w-full max-w-lg shadow-sm">
+    <Card className="w-full shadow-sm">
       <CardHeader className="pb-4">
         <CardTitle className="text-lg">Book an Appointment</CardTitle>
         <CardDescription>Choose a date and available time slot.</CardDescription>

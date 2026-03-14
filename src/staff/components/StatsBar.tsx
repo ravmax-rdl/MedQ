@@ -1,12 +1,16 @@
 import { Card, CardContent } from '@/components/ui/card';
-import type { Stats } from '@/lib/api';
-import { Users, Clock, CalendarDays, Activity, TrendingUp } from 'lucide-react';
+import type { Stats, QueueEntry } from '@/lib/api';
+import { Users, Clock, Eye, Phone, SkipForward, Activity, TrendingUp } from 'lucide-react';
 
 interface Props {
   stats: Stats | null;
+  queue: QueueEntry[];
 }
 
-export default function StatsBar({ stats }: Props) {
+export default function StatsBar({ stats, queue }: Props) {
+  const called = queue.filter((e) => e.status === 'called').length;
+  const seen = queue.filter((e) => e.status === 'seen').length;
+  const skipped = queue.filter((e) => e.status === 'skipped').length;
 
   const items = [
     {
@@ -31,16 +35,30 @@ export default function StatsBar({ stats }: Props) {
       accent: 'text-sky-500',
     },
     {
-      label: 'Appointments',
-      value: stats?.appointments_today ?? '—',
-      sub: 'Booked / confirmed',
-      icon: CalendarDays,
+      label: 'Called',
+      value: called,
+      sub: 'Being attended',
+      icon: Phone,
       accent: 'text-sky-500',
+    },
+    {
+      label: 'Seen',
+      value: seen,
+      sub: 'Visit completed',
+      icon: Eye,
+      accent: 'text-green-500',
+    },
+    {
+      label: 'Skipped',
+      value: skipped,
+      sub: 'Did not attend',
+      icon: SkipForward,
+      accent: 'text-orange-500',
     },
   ];
 
   return (
-    <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
+    <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-6">
       {items.map(({ label, value, sub, icon: Icon, accent }) => (
         <Card key={label} className="relative overflow-hidden">
           <CardContent className="py-5 px-5">

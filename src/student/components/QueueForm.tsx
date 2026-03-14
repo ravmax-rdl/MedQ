@@ -51,7 +51,7 @@ export default function QueueForm({ onJoined }: Props) {
   }
 
   return (
-    <Card className="w-full max-w-lg shadow-sm">
+    <Card className="w-full shadow-sm">
       <CardHeader className="pb-4">
         <CardTitle className="text-lg">Join the Walk-in Queue</CardTitle>
         <CardDescription>Enter your details below — you'll be added instantly.</CardDescription>

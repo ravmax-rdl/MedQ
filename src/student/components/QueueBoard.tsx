@@ -51,7 +51,7 @@ export default function QueueBoard({ myId, onLeave }: Props) {
 
   if (myEntryLoading && !myEntry) {
     return (
-      <Card className="w-full max-w-2xl">
+      <Card className="w-full">
         <CardContent className="py-12 text-center text-muted-foreground text-sm flex items-center justify-center gap-2">
           <RefreshCw className="size-4 animate-spin" />
           Loading your queue status…
@@ -61,7 +61,7 @@ export default function QueueBoard({ myId, onLeave }: Props) {
   }
 
   return (
-    <div className="w-full max-w-2xl flex flex-col gap-4">
+    <div className="w-full flex flex-col gap-4">
 
       {/* Called — prominent animated banner */}
       {isCalled && (

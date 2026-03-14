@@ -45,6 +45,7 @@ router.get('/daily', requireAuth, (_req, res) => {
     date,
     queue_total: queueMap[date]?.total ?? 0,
     queue_seen: queueMap[date]?.seen ?? 0,
+    queue_skipped: queueMap[date]?.skipped ?? 0,
     appointments: apptMap[date]?.total ?? 0,
     appointments_completed: apptMap[date]?.completed ?? 0,
   }));

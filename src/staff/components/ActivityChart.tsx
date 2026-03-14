@@ -14,12 +14,16 @@ import { getDailyStats, type DailyStats } from '@/lib/api';
 
 const chartConfig = {
   queue_total: {
-    label: 'Walk-ins',
+    label: 'Total',
     color: 'var(--chart-1)',
   },
-  appointments: {
-    label: 'Appointments',
-    color: 'var(--chart-2)',
+  queue_seen: {
+    label: 'Seen',
+    color: 'var(--chart-4)',
+  },
+  queue_skipped: {
+    label: 'Skipped',
+    color: 'var(--chart-5)',
   },
 } satisfies ChartConfig;
 
@@ -53,16 +57,16 @@ export function ActivityChart() {
     <Card className="pt-0">
       <CardHeader className="flex items-center gap-2 space-y-0 border-b py-5 sm:flex-row">
         <div className="grid flex-1 gap-1">
-          <CardTitle className="text-base">Clinic Activity</CardTitle>
-          <CardDescription>Walk-ins and appointments over time</CardDescription>
+          <CardTitle className="text-base">Queue Trends</CardTitle>
+          <CardDescription>Total, seen and skipped queue entries over time</CardDescription>
         </div>
         <Select value={range} onValueChange={(v) => setRange(v as '7d' | '3d')}>
           <SelectTrigger className="w-[130px] text-xs h-8" aria-label="Select range">
             <SelectValue />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="7d" >Last 7 days</SelectItem>
-            <SelectItem value="3d" >Last 3 days</SelectItem>
+            <SelectItem value="7d">Last 7 days</SelectItem>
+            <SelectItem value="3d">Last 3 days</SelectItem>
           </SelectContent>
         </Select>
       </CardHeader>
@@ -74,9 +78,13 @@ export function ActivityChart() {
                 <stop offset="5%" stopColor="var(--color-queue_total)" stopOpacity={0.8} />
                 <stop offset="95%" stopColor="var(--color-queue_total)" stopOpacity={0.1} />
               </linearGradient>
-              <linearGradient id="fillAppointments" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor="var(--color-appointments)" stopOpacity={0.8} />
-                <stop offset="95%" stopColor="var(--color-appointments)" stopOpacity={0.1} />
+              <linearGradient id="fillQueueSeen" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="5%" stopColor="var(--color-queue_seen)" stopOpacity={0.8} />
+                <stop offset="95%" stopColor="var(--color-queue_seen)" stopOpacity={0.1} />
+              </linearGradient>
+              <linearGradient id="fillQueueSkipped" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="5%" stopColor="var(--color-queue_skipped)" stopOpacity={0.8} />
+                <stop offset="95%" stopColor="var(--color-queue_skipped)" stopOpacity={0.1} />
               </linearGradient>
             </defs>
             <CartesianGrid vertical={false} strokeDasharray="3 3" />
@@ -87,26 +95,35 @@ export function ActivityChart() {
               tickMargin={8}
               tick={{ fontSize: 11 }}
             />
-            <YAxis tickLine={false} axisLine={false} tickMargin={8} tick={{ fontSize: 11 }} width={24} />
-            <ChartTooltip
-              cursor={false}
-              content={<ChartTooltipContent indicator="dot" />}
+            <YAxis
+              tickLine={false}
+              axisLine={false}
+              tickMargin={8}
+              tick={{ fontSize: 11 }}
+              width={24}
+              allowDecimals={false}
             />
-            <Area
-              dataKey="appointments"
-              type="monotone"
-              fill="url(#fillAppointments)"
-              stroke="var(--color-appointments)"
-              strokeWidth={2}
-              stackId="a"
-            />
+            <ChartTooltip cursor={false} content={<ChartTooltipContent indicator="dot" />} />
             <Area
               dataKey="queue_total"
               type="monotone"
               fill="url(#fillQueueTotal)"
               stroke="var(--color-queue_total)"
               strokeWidth={2}
-              stackId="a"
+            />
+            <Area
+              dataKey="queue_seen"
+              type="monotone"
+              fill="url(#fillQueueSeen)"
+              stroke="var(--color-queue_seen)"
+              strokeWidth={2}
+            />
+            <Area
+              dataKey="queue_skipped"
+              type="monotone"
+              fill="url(#fillQueueSkipped)"
+              stroke="var(--color-queue_skipped)"
+              strokeWidth={2}
             />
             <ChartLegend content={<ChartLegendContent />} />
           </AreaChart>
