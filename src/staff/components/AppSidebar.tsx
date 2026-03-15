@@ -1,5 +1,5 @@
 import { NavLink, useNavigate, useLocation } from 'react-router-dom';
-import { LayoutDashboard, CalendarDays, LogOut, Sun, Moon, Activity } from 'lucide-react';
+import { LayoutDashboard, CalendarDays, LogOut, Sun, Moon } from 'lucide-react';
 import {
   Sidebar,
   SidebarContent,
@@ -41,15 +41,15 @@ export function AppSidebar() {
   return (
     <Sidebar collapsible="icon">
       <SidebarHeader className="py-4 px-3">
-        <div className="flex items-center gap-2 px-1 overflow-hidden">
-          <div className="flex size-7 items-center justify-center roundedshrink-0">
+        <NavLink to="/staff" className="flex items-center gap-2 px-1 overflow-hidden">
+          <div className="flex size-7 items-center justify-center shrink-0">
             <img src={theme === 'dark' ? '/white.svg' : '/black.svg'} alt="MedQ" className="h-6" />
           </div>
           <div className="flex flex-col leading-none group-data-[collapsible=icon]:hidden">
             <span className="font-semibold text-sm tracking-tight">MedQ</span>
             <span className="text-xs text-muted-foreground">Staff Portal</span>
           </div>
-        </div>
+        </NavLink>
       </SidebarHeader>
 
       <SidebarSeparator />
