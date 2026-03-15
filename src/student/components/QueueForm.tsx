@@ -12,11 +12,13 @@ import {
   Syringe,
   Brain,
   CircleDot,
+  AlertTriangle,
 } from 'lucide-react';
 
 const REASONS: { label: string; icon: React.ElementType }[] = [
   { label: 'General', icon: Stethoscope },
   { label: 'Sick Leave', icon: FileText },
+  { label: 'Emergency', icon: AlertTriangle },
   { label: 'Prescription', icon: Pill },
   { label: 'Referral', icon: ArrowRightLeft },
   { label: 'Vaccination', icon: Syringe },

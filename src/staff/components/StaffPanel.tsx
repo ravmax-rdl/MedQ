@@ -174,13 +174,15 @@ export default function StaffPanel({ queue, loading, refresh }: Props) {
                         <TableRow
                           key={entry.id}
                           className={
-                            entry.status === 'called'
-                              ? 'bg-sky-50/40 dark:bg-sky-950/10'
-                              : entry.status === 'seen'
-                                ? 'opacity-60'
-                                : entry.status === 'skipped'
-                                  ? 'opacity-70'
-                                  : ''
+                            entry.reason === 'Emergency'
+                              ? 'bg-red-100 dark:bg-red-950'
+                              : entry.status === 'called'
+                                ? 'bg-sky-50/40 dark:bg-sky-950/10'
+                                : entry.status === 'seen'
+                                  ? 'opacity-60'
+                                  : entry.status === 'skipped'
+                                    ? 'opacity-70'
+                                    : ''
                           }
                         >
                           <TableCell className="font-mono text-xs pl-5 text-muted-foreground">
