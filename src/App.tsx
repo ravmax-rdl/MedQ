@@ -1,27 +1,38 @@
-import { useState } from 'react'
-import './App.css'
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import StudentHome from './student/pages/StudentHome';
+import QueuePage from './student/pages/QueuePage';
+import Appointments from './student/pages/Appointments';
+import StaffLogin from './staff/pages/StaffLogin';
+import StaffDashboard from './staff/pages/StaffDashboard';
+import StaffAppointments from './staff/pages/StaffAppointments';
+import RequireAuth from './components/RequireAuth';
 
-function App() {
-  const [count, setCount] = useState(0)
-
+export default function App() {
   return (
-    <>
-      <div>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<StudentHome />} />
+        <Route path="/queue" element={<QueuePage />} />
+        <Route path="/appointments" element={<Appointments />} />
+        <Route path="/staff/login" element={<StaffLogin />} />
+        <Route
+          path="/staff"
+          element={
+            <RequireAuth>
+              <StaffDashboard />
+            </RequireAuth>
+          }
+        />
+        <Route
+          path="/staff/appointments"
+          element={
+            <RequireAuth>
+              <StaffAppointments />
+            </RequireAuth>
+          }
+        />
+        <Route path="*" element={<Navigate to="/" replace />} />
+      </Routes>
+    </BrowserRouter>
+  );
 }
-
-export default App
