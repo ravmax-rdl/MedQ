@@ -57,7 +57,7 @@ export function StudentSidebar() {
                   : location.pathname.startsWith(to);
                 return (
                   <SidebarMenuItem key={to}>
-                    <SidebarMenuButton asChild isActive={isActive} tooltip={label}>
+                    <SidebarMenuButton asChild isActive={isActive} tooltip={label} className="transition-all duration-200 hover:-translate-y-1 hover:shadow-md active:translate-y-0 active:shadow-none">
                       <NavLink to={to} end={exact}>
                         <Icon />
                         <span>{label}</span>
@@ -75,7 +75,7 @@ export function StudentSidebar() {
         <SidebarSeparator className="mb-1" />
         <SidebarMenu>
           <SidebarMenuItem>
-            <SidebarMenuButton tooltip="Toggle theme" onClick={handleThemeToggle}>
+            <SidebarMenuButton tooltip="Toggle theme" onClick={handleThemeToggle} className="transition-all duration-200 hover:-translate-y-1 hover:shadow-md active:translate-y-0 active:shadow-none">
               {theme === 'dark' ? <Sun /> : <Moon />}
               <span>{theme === 'dark' ? 'Light mode' : 'Dark mode'}</span>
             </SidebarMenuButton>
