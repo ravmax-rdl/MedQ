@@ -75,13 +75,13 @@ export default function StudentHome() {
         <div className="w-full border-y border-border/60 bg-muted/20 dark:bg-muted/10">
           <div className="max-w-3xl mx-auto px-5 py-4 sm:px-8 grid grid-cols-3 gap-4 text-center">
             {[
-              { icon: Clock, label: 'Clinic hours', value: 'Mon–Fri, 9 am – 4 pm' },
+              { icon: Clock, label: 'Clinic hours', value: 'Week Days 8.00 AM to 4.00 PM' },
               {
                 icon: MapPin,
                 label: 'Location',
                 value: 'University of Colombo Medical Center, Colombo 07',
               },
-              { icon: Phone, label: 'Reception', value: '+(94) 777 677 222' },
+              { icon: Phone, label: 'Reception', value: '+(94) 112584985' },
             ].map(({ icon: Icon, label, value }) => (
               <div key={label} className="flex flex-col items-center gap-1">
                 <Icon className="size-4 text-sky-500 dark:text-sky-400 mb-0.5" />
