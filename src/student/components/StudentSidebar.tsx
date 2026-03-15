@@ -33,7 +33,7 @@ export function StudentSidebar() {
   return (
     <Sidebar collapsible="icon">
       <SidebarHeader className="py-4 px-3">
-        <div className="flex items-center gap-2 px-1 overflow-hidden">
+        <NavLink to="/" className="flex items-center gap-2 px-1 overflow-hidden">
           <div className="flex size-7 items-center justify-center shrink-0">
             <img src={theme === 'dark' ? '/white.svg' : '/black.svg'} alt="MedQ" className="h-6" />
           </div>
@@ -41,7 +41,7 @@ export function StudentSidebar() {
             <span className="font-semibold text-sm tracking-tight">MedQ</span>
             <span className="text-xs text-muted-foreground">Student Portal</span>
           </div>
-        </div>
+        </NavLink>
       </SidebarHeader>
 
       <SidebarSeparator />
