@@ -4,20 +4,22 @@ import db from '../db';
 const router = Router();
 
 function recalcPositions() {
-  db.prepare(`
+  db.prepare(
+    `
     UPDATE queue SET position = (
       SELECT COUNT(*) FROM queue q2
       WHERE q2.status = 'waiting'
       AND q2.joined_at <= queue.joined_at
     )
     WHERE status = 'waiting'
-  `).run();
+  `
+  ).run();
 }
 
 function getAvgWait(): number | null {
   const row = db
     .prepare(
-      `SELECT AVG(duration_mins) as avg FROM session_log WHERE completed_at >= date('now')`
+      `SELECT AVG(duration_mins) as avg FROM session_log WHERE completed_at >= date('now') AND duration_mins >= 0`
     )
     .get() as { avg: number | null };
   return row?.avg ?? null;
@@ -55,7 +57,8 @@ router.get('/', (req, res) => {
 
   const result = entries.map((e) => ({
     ...e,
-    estimated_wait_mins: e.status === 'waiting' && avg ? Math.round(avg * e.position) : null,
+    estimated_wait_mins:
+      e.status === 'waiting' && avg != null ? Math.round(avg * e.position) : null,
   }));
 
   res.json(result);
@@ -69,9 +72,15 @@ router.get('/mine', (req, res) => {
   }
 
   type QueueRow = {
-    id: number; name: string; student_id: string; reason: string;
-    status: string; position: number; joined_at: string;
-    called_at: string | null; seen_at: string | null;
+    id: number;
+    name: string;
+    student_id: string;
+    reason: string;
+    status: string;
+    position: number;
+    joined_at: string;
+    called_at: string | null;
+    seen_at: string | null;
   };
 
   const entries = db
@@ -83,7 +92,8 @@ router.get('/mine', (req, res) => {
   const avg = getAvgWait();
   const result = entries.map((e) => ({
     ...e,
-    estimated_wait_mins: e.status === 'waiting' && avg ? Math.round(avg * e.position) : null,
+    estimated_wait_mins:
+      e.status === 'waiting' && avg != null ? Math.round(avg * e.position) : null,
   }));
 
   res.json(result);
@@ -92,7 +102,17 @@ router.get('/mine', (req, res) => {
 router.get('/:id', (req, res) => {
   const { id } = req.params;
   const entry = db.prepare(`SELECT * FROM queue WHERE id = ?`).get(id) as
-    | { id: number; name: string; student_id: string; reason: string; status: string; position: number; joined_at: string; called_at: string | null; seen_at: string | null }
+    | {
+        id: number;
+        name: string;
+        student_id: string;
+        reason: string;
+        status: string;
+        position: number;
+        joined_at: string;
+        called_at: string | null;
+        seen_at: string | null;
+      }
     | undefined;
 
   if (!entry) {
@@ -103,7 +123,8 @@ router.get('/:id', (req, res) => {
   const avg = getAvgWait();
   res.json({
     ...entry,
-    estimated_wait_mins: entry.status === 'waiting' && avg ? Math.round(avg * entry.position) : null,
+    estimated_wait_mins:
+      entry.status === 'waiting' && avg != null ? Math.round(avg * entry.position) : null,
   });
 });
 

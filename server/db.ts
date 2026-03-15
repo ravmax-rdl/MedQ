@@ -53,6 +53,8 @@ db.exec(`
   );
 `);
 
+db.prepare(`UPDATE session_log SET duration_mins = 0 WHERE duration_mins < 0`).run();
+
 const existing = db.prepare(`SELECT id FROM users WHERE username = 'admin'`).get();
 if (!existing) {
   const hash = bcrypt.hashSync('clinic2025', 10);
@@ -118,7 +120,7 @@ const REASONS = [
   'Flu symptoms',
   'Headache',
   'Follow-up',
-  'Prescription refill',
+  'Prescription',
   'Allergy',
   'Minor injury',
 ] as const;
