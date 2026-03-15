@@ -147,13 +147,6 @@ export default function StudentHome() {
             <ShieldCheck className="size-3.5 text-sky-500 shrink-0" />
             Your data stays local — no cloud, no tracking, no accounts.
           </div>
-          <Link
-            to="/staff/login"
-            className="text-xs text-muted-foreground hover:text-sky-600 dark:hover:text-sky-400 flex items-center gap-1 transition-colors"
-          >
-            Staff portal
-            <ArrowRight className="size-3" />
-          </Link>
         </footer>
       </main>
     </div>
