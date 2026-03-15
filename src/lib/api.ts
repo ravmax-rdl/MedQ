@@ -57,6 +57,18 @@ export async function getQueue(): Promise<QueueEntry[]> {
   return handleResponse(res);
 }
 
+export async function getFullQueue(date?: string): Promise<QueueEntry[]> {
+  const params = date ? `?all=true&date=${encodeURIComponent(date)}` : '?all=true';
+  const res = await fetch(`${BASE}/queue${params}`);
+  return handleResponse(res);
+}
+
+export async function getQueueEntry(id: number): Promise<QueueEntry | null> {
+  const res = await fetch(`${BASE}/queue/${id}`);
+  if (res.status === 404) return null;
+  return handleResponse(res);
+}
+
 export async function joinQueue(data: {
   name: string;
   student_id: string;
@@ -67,6 +79,16 @@ export async function joinQueue(data: {
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(data),
   });
+  return handleResponse(res);
+}
+
+export async function getMyQueueEntries(studentId: string): Promise<QueueEntry[]> {
+  const res = await fetch(`${BASE}/queue/mine?student_id=${encodeURIComponent(studentId)}`);
+  return handleResponse(res);
+}
+
+export async function leaveQueue(id: number): Promise<void> {
+  const res = await fetch(`${BASE}/queue/${id}/leave`, { method: 'DELETE' });
   return handleResponse(res);
 }
 
@@ -143,6 +165,11 @@ export async function updateAppointmentStatus(
   return handleResponse(res);
 }
 
+export async function getMyAppointments(studentId: string): Promise<Appointment[]> {
+  const res = await fetch(`${BASE}/appointments/mine?student_id=${encodeURIComponent(studentId)}`);
+  return handleResponse(res);
+}
+
 export async function cancelAppointment(id: number): Promise<Appointment> {
   const res = await fetch(`${BASE}/appointments/${id}`, {
     method: 'DELETE',
@@ -159,8 +186,25 @@ export interface Stats {
   appointments_today: number;
 }
 
-export async function getStats(): Promise<Stats> {
-  const res = await fetch(`${BASE}/stats`, {
+export async function getStats(date?: string): Promise<Stats> {
+  const params = date ? `?date=${encodeURIComponent(date)}` : '';
+  const res = await fetch(`${BASE}/stats${params}`, {
+    headers: { ...authHeaders() },
+  });
+  return handleResponse(res);
+}
+
+export interface DailyStats {
+  date: string;
+  queue_total: number;
+  queue_seen: number;
+  queue_skipped: number;
+  appointments: number;
+  appointments_completed: number;
+}
+
+export async function getDailyStats(): Promise<DailyStats[]> {
+  const res = await fetch(`${BASE}/stats/daily`, {
     headers: { ...authHeaders() },
   });
   return handleResponse(res);

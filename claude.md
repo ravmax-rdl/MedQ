@@ -125,7 +125,7 @@ password: clinic2025
 
 ## UI Guidelines
 
-- **Style:** Modern, minimal, clinical. Think Linear or Vercel's dashboard aesthetic — not colourful, not playful.
+- **Style:** Modern, minimal, clinical. Think Linear or Vercel's dashboard aesthetic.
 - **Font:** Use `Geist`. No custom font installs.
 - **Colour:** Neutral greys with a single blue accent (`sky-500` / `sky-600`). Avoid bright colours except for status badges.
 - **Status badges:**
