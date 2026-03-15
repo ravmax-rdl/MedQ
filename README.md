@@ -7,15 +7,49 @@
 ## Features
 
 ### Student Portal
+
 - **Live Queue Board:** Join the queue by providing ID/reason and immediately see your position on a live-updating board.
 - **Dynamic Wait Estimates:** Displays an estimated wait time actively learned from recent appointment durations.
 - **Appointment Booking:** A simple date and time picker allowing students to reserve available 30-minute time slots in advance.
 - **Smart Alerts:** Prominent live banners alert students the moment their status changes to "Called."
 
 ### Staff Dashboard
-- **Live Queue Management:** Advance the walk-in queue with single-click actions (*Call*, *Seen*, *Skip*, *Remove*).
+
+- **Live Queue Management:** Advance the walk-in queue with single-click actions (_Call_, _Seen_, _Skip_, _Remove_).
 - **Appointment Day-View:** Track, confirm, complete, or cancel pre-booked appointments using a calendar-based interface.
 - **Daily Statistics:** Real-time metrics tracking patients seen, currently waiting count, and average wait times.
+
+<table>
+  <tr>
+    <!-- Column 1 -->
+    <td align="center">
+      <img src="public/screenshots/1.png" width="200" alt="Description 1"/>
+      <br>
+    </td>
+    <!-- Column 2 -->
+    <td align="center">
+      <img src="public/screenshots/1.png" width="200" alt="Description 2"/>
+      <br>
+    </td>
+    <!-- Column 3 -->
+    <td align="center">
+      <img src="public/screenshots/3.png" width="200" alt="Description 3"/>
+      <br>
+    </td>
+  </tr>
+  <tr>
+    <!-- Column 1 -->
+    <td align="center">
+      <img src="public/screenshots/4.png" width="200" alt="Description 1"/>
+      <br>
+    </td>
+    <!-- Column 2 -->
+    <td align="center">
+      <img src="public/screenshots/5.png" width="200" alt="Description 2"/>
+      <br>
+    </td>
+  </tr>
+</table>
 
 ---
 
