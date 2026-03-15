@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate, Link, Navigate } from 'react-router-dom';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -15,8 +15,7 @@ export default function StaffLogin() {
   const navigate = useNavigate();
 
   if (isAuthenticated) {
-    navigate('/staff', { replace: true });
-    return null;
+    return <Navigate to="/staff" replace />;
   }
 
   async function handleSubmit(e: React.FormEvent) {
