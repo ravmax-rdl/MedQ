@@ -75,20 +75,39 @@ export default function StudentHome() {
         <div className="w-full border-y border-border/60 bg-muted/20 dark:bg-muted/10">
           <div className="max-w-3xl mx-auto px-5 py-4 sm:px-8 grid grid-cols-3 gap-4 text-center">
             {[
-              { icon: Clock, label: 'Clinic hours', value: 'Mon–Fri, 9 am – 4 pm' },
+              { icon: Clock, label: 'Clinic hours', value: 'Mon–Fri, 8 am – 4 pm' },
               {
                 icon: MapPin,
                 label: 'Location',
                 value: 'University of Colombo Medical Center, Colombo 07',
               },
-              { icon: Phone, label: 'Reception', value: '+(94) 777 677 222' },
-            ].map(({ icon: Icon, label, value }) => (
+              { 
+                icon: Phone, 
+                label: 'Reception', 
+                value: '+94 112584985',
+                href: 'tel:+94112584985' 
+              },
+            ].map(({ icon: Icon, label, value, href }) => (
               <div key={label} className="flex flex-col items-center gap-1">
-                <Icon className="size-4 text-sky-500 dark:text-sky-400 mb-0.5" />
-                <p className="text-[10px] uppercase tracking-wider text-muted-foreground">
-                  {label}
-                </p>
-                <p className="text-xs font-medium text-foreground leading-tight">{value}</p>
+                {href ? (
+                  <a href={href} className="group flex flex-col items-center gap-1 transition-colors">
+                    <Icon className="size-4 text-sky-500 dark:text-sky-400 mb-0.5 group-hover:text-sky-600 dark:group-hover:text-sky-300 transition-colors" />
+                    <p className="text-[10px] uppercase tracking-wider text-muted-foreground">
+                      {label}
+                    </p>
+                    <p className="text-xs font-medium text-foreground group-hover:text-sky-500 transition-colors leading-tight">
+                      {value}
+                    </p>
+                  </a>
+                ) : (
+                  <>
+                    <Icon className="size-4 text-sky-500 dark:text-sky-400 mb-0.5" />
+                    <p className="text-[10px] uppercase tracking-wider text-muted-foreground">
+                      {label}
+                    </p>
+                    <p className="text-xs font-medium text-foreground leading-tight">{value}</p>
+                  </>
+                )}
               </div>
             ))}
           </div>
@@ -142,10 +161,13 @@ export default function StudentHome() {
         </section>
 
         {/* ── Footer strip ── */}
-        <footer className="w-full border-t border-border/50 px-5 py-5 flex flex-col gap-2 items-center text-center sm:flex-row sm:justify-between sm:text-left sm:px-8">
+        <footer className="w-full border-t border-border/50 px-5 py-5 flex flex-col gap-3 items-center text-center sm:flex-row sm:justify-between sm:text-left sm:px-8">
           <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
             <ShieldCheck className="size-3.5 text-sky-500 shrink-0" />
             Your data stays local — no cloud, no tracking, no accounts.
+          </div>
+          <div className="text-[10px] uppercase tracking-wider text-muted-foreground/80 font-medium">
+            © 2026 Group 16 Orientation Programe UCSC. All rights reserved.
           </div>
         </footer>
       </main>

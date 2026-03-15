@@ -86,6 +86,12 @@ export default function StaffLogin() {
             ← Back to student queue
           </Link>
         </p>
+
+        <footer className="mt-8 border-t border-border/40 pt-8">
+          <p className="text-[10px] uppercase tracking-wider text-muted-foreground/60 text-center font-medium">
+            © 2026 Group 16 Orientation Programe UCSC. All rights reserved.
+          </p>
+        </footer>
       </div>
     </div>
   );
