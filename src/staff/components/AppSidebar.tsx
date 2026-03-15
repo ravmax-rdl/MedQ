@@ -41,7 +41,7 @@ export function AppSidebar() {
   return (
     <Sidebar collapsible="icon">
       <SidebarHeader className="py-4 px-3">
-        <NavLink to="/staff" className="flex items-center gap-2 px-1 overflow-hidden">
+        <NavLink to="/" className="flex items-center gap-2 px-1 overflow-hidden">
           <div className="flex size-7 items-center justify-center shrink-0">
             <img src={theme === 'dark' ? '/white.svg' : '/black.svg'} alt="MedQ" className="h-6" />
           </div>
