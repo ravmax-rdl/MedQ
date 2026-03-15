@@ -37,5 +37,5 @@ app.use('/api/appointments', manageAppointmentsRouter);
 app.use('/api/stats', statsRouter);
 
 app.listen(PORT, '0.0.0.0', () => {
-  console.log(`MedQ server running at http://0.0.0.0:${PORT}`);
+  console.log(`MedQ server running. Listening on 0.0.0.0:${PORT} (visit http://localhost:${PORT})`);
 });
