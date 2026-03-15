@@ -94,7 +94,7 @@ export default function StaffPanel({ queue, loading, refresh }: Props) {
   }
 
   function elapsed(iso: string, nowValue: number) {
-    const mins = Math.floor((nowValue - parseDbDate(iso).getTime()) / 60000);
+    const mins = Math.max(0, Math.floor((nowValue - parseDbDate(iso).getTime()) / 60000));
     if (mins < 60) return `${mins}m`;
     return `${Math.floor(mins / 60)}h ${mins % 60}m`;
   }
@@ -106,8 +106,11 @@ export default function StaffPanel({ queue, loading, refresh }: Props) {
     }
     // For seen: show actual time from joining to when they were seen
     if (entry.status === 'seen' && entry.seen_at) {
-      const mins = Math.floor(
-        (parseDbDate(entry.seen_at).getTime() - parseDbDate(entry.joined_at).getTime()) / 60000
+      const mins = Math.max(
+        0,
+        Math.floor(
+          (parseDbDate(entry.seen_at).getTime() - parseDbDate(entry.joined_at).getTime()) / 60000
+        )
       );
       if (mins < 60) return `${mins}m`;
       return `${Math.floor(mins / 60)}h ${mins % 60}m`;
