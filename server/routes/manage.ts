@@ -5,14 +5,16 @@ import { requireAuth } from '../middleware/requireAuth';
 const router = Router();
 
 function recalcPositions() {
-  db.prepare(`
+  db.prepare(
+    `
     UPDATE queue SET position = (
       SELECT COUNT(*) FROM queue q2
       WHERE q2.status = 'waiting'
       AND q2.joined_at <= queue.joined_at
     )
     WHERE status = 'waiting'
-  `).run();
+  `
+  ).run();
 }
 
 router.patch('/:id', requireAuth, (req, res) => {
@@ -43,15 +45,17 @@ router.patch('/:id', requireAuth, (req, res) => {
     const serviceStartMs = entry.called_at
       ? parseUtc(entry.called_at).getTime()
       : parseUtc(entry.joined_at).getTime();
-    const durationMins = (Date.now() - serviceStartMs) / 60000;
+    const durationMins = Math.max(0, (Date.now() - serviceStartMs) / 60000);
     db.prepare(`INSERT INTO session_log (duration_mins) VALUES (?)`).run(durationMins);
-    db.prepare(
-      `UPDATE queue SET status = ?, seen_at = datetime('now') WHERE id = ?`
-    ).run(status, id);
+    db.prepare(`UPDATE queue SET status = ?, seen_at = datetime('now') WHERE id = ?`).run(
+      status,
+      id
+    );
   } else if (status === 'called') {
-    db.prepare(
-      `UPDATE queue SET status = ?, called_at = datetime('now') WHERE id = ?`
-    ).run(status, id);
+    db.prepare(`UPDATE queue SET status = ?, called_at = datetime('now') WHERE id = ?`).run(
+      status,
+      id
+    );
   } else {
     db.prepare(`UPDATE queue SET status = ? WHERE id = ?`).run(status, id);
   }

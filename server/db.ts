@@ -53,6 +53,21 @@ db.exec(`
   );
 `);
 
+db.prepare(`UPDATE session_log SET duration_mins = 0 WHERE duration_mins < 0`).run();
+db.prepare(`UPDATE queue SET joined_at = datetime('now') WHERE joined_at > datetime('now')`).run();
+db.prepare(`UPDATE queue SET called_at = datetime('now') WHERE called_at > datetime('now')`).run();
+db.prepare(`UPDATE queue SET seen_at = datetime('now') WHERE seen_at > datetime('now')`).run();
+db.prepare(
+  `UPDATE queue SET called_at = joined_at WHERE called_at IS NOT NULL AND called_at < joined_at`
+).run();
+db.prepare(
+  `
+  UPDATE queue
+  SET seen_at = COALESCE(called_at, joined_at)
+  WHERE seen_at IS NOT NULL AND seen_at < COALESCE(called_at, joined_at)
+`
+).run();
+
 const existing = db.prepare(`SELECT id FROM users WHERE username = 'admin'`).get();
 if (!existing) {
   const hash = bcrypt.hashSync('clinic2025', 10);
@@ -118,7 +133,7 @@ const REASONS = [
   'Flu symptoms',
   'Headache',
   'Follow-up',
-  'Prescription refill',
+  'Prescription',
   'Allergy',
   'Minor injury',
 ] as const;
@@ -217,6 +232,16 @@ function seedTwoWeeksIfEmpty() {
         joinedAt.setUTCHours(8, 0, 0, 0);
         joinedAt.setUTCMinutes(joinedAt.getUTCMinutes() + entryIndex * 17 + (dayIndex % 3) * 4);
 
+        if (dayOffset === 0) {
+          const now = new Date();
+          const latestAllowedJoined = new Date(
+            now.getTime() - (queueEntries - entryIndex) * 120000
+          );
+          if (joinedAt.getTime() > latestAllowedJoined.getTime()) {
+            joinedAt.setTime(latestAllowedJoined.getTime());
+          }
+        }
+
         const statusPool = dayOffset === 0 ? queueStatusesToday : queueStatusesHistory;
         const status = statusPool[(entryIndex + dayIndex) % statusPool.length];
 
@@ -225,6 +250,23 @@ function seedTwoWeeksIfEmpty() {
 
         const seenAt = new Date(calledAt);
         seenAt.setUTCMinutes(seenAt.getUTCMinutes() + 7 + ((entryIndex * 3 + dayIndex) % 19));
+
+        if (dayOffset === 0) {
+          const now = new Date();
+          if (calledAt.getTime() > now.getTime()) {
+            calledAt.setTime(now.getTime());
+          }
+          if (calledAt.getTime() < joinedAt.getTime()) {
+            calledAt.setTime(joinedAt.getTime());
+          }
+
+          if (seenAt.getTime() > now.getTime()) {
+            seenAt.setTime(now.getTime());
+          }
+          if (seenAt.getTime() < calledAt.getTime()) {
+            seenAt.setTime(calledAt.getTime());
+          }
+        }
 
         const nameIndex = dayIndex * 30 + entryIndex;
         const name = makeName(nameIndex);

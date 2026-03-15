@@ -122,6 +122,13 @@ export default function StaffDashboard() {
           </div>
 
           <StaffPanel queue={queue} loading={loading} refresh={refresh} />
+
+          {/* Footer */}
+          <footer className="mt-auto pt-10 pb-4 border-t border-border/40">
+            <p className="text-[10px] uppercase tracking-wider text-muted-foreground/60 text-center font-medium">
+              © 2026 Group 16 Orientation Programe UCSC. All rights reserved.
+            </p>
+          </footer>
         </div>
       </SidebarInset>
     </SidebarProvider>

@@ -1,6 +1,6 @@
 import { Link, useLocation } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { Menu, Moon, Sun, X } from 'lucide-react';
+import { Menu, Moon, Sun, X, ArrowRight, ClockAlert } from 'lucide-react';
 import { toggleTheme, getTheme } from '@/lib/theme';
 import { useState } from 'react';
 
@@ -16,6 +16,7 @@ export default function StudentHeader() {
   const isHome = location.pathname === '/';
   const isQueue = location.pathname === '/queue';
   const isAppts = location.pathname === '/appointments';
+  const isStaff = location.pathname.startsWith('/staff');
 
   return (
     <>
@@ -70,6 +71,21 @@ export default function StudentHeader() {
           </nav>
 
           <div className="flex items-center gap-2.5">
+            <Link
+              to="/staff/login"
+              className={`hidden md:inline-flex items-center gap-1 text-sm px-2 py-1 rounded-sm transition-colors ${
+                isStaff
+                  ? 'font-medium text-sky-600 dark:text-sky-400 bg-sky-50 dark:bg-sky-950/40'
+                  : 'text-muted-foreground hover:text-sky-600 dark:hover:text-sky-400 hover:bg-muted'
+              }`}
+            >
+              <Button variant="outline"  className="h-6 py-3 px-2">
+              Staff portal 
+              <ArrowRight className="size-3" /> 
+              </Button>
+              
+            </Link>
+
             <Button
               variant="ghost"
               size="icon"
@@ -131,6 +147,17 @@ export default function StudentHeader() {
               }`}
             >
               Appointments
+            </Link>
+            <Link
+              to="/staff/login"
+              onClick={() => setMobileMenuOpen(false)}
+              className={`text-sm rounded-sm px-3 py-2 transition-colors ${
+                isStaff
+                  ? 'font-medium text-sky-600 dark:text-sky-400 bg-sky-50 dark:bg-sky-950/40'
+                  : 'text-muted-foreground hover:text-foreground hover:bg-muted'
+              }`}
+            >
+              Staff portal
             </Link>
           </div>
         </div>

@@ -210,7 +210,7 @@ function ClinicInfoCard() {
         </ol>
         <div className="mt-4 pt-4 border-t border-border/50 flex flex-col gap-1.5">
           <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Clinic Hours</p>
-          <p className="text-sm font-semibold">Mon – Fri &nbsp;·&nbsp; 09:00 – 16:00</p>
+          <p className="text-sm font-semibold">Mon – Fri &nbsp;·&nbsp; 08:00 – 16:00</p>
         </div>
       </CardContent>
     </Card>
@@ -244,7 +244,7 @@ function QueueStats() {
     },
     {
       label: 'Walk-in Hours',
-      value: '09:00',
+      value: '08:00',
       icon: CalendarClock,
       suffix: '– 16:00',
     },
@@ -334,6 +334,13 @@ export default function QueuePage() {
               {inQueue ? <ClinicInfoCard /> : <QueueLookup />}
             </div>
           </div>
+
+          {/* Footer */}
+          <footer className="mt-auto pt-10 pb-4 border-t border-border/40">
+            <p className="text-[10px] uppercase tracking-wider text-muted-foreground/60 text-center font-medium">
+              © 2026 Group 16 Orientation Programe UCSC. All rights reserved.
+            </p>
+          </footer>
         </div>
       </SidebarInset>
     </SidebarProvider>

@@ -100,7 +100,7 @@ function ApptStats() {
     },
     {
       label: 'Booking Hours',
-      value: '09:00',
+      value: '08:00',
       icon: Clock,
       suffix: '– 16:00  ·  Mon–Fri',
       large: false,
@@ -249,6 +249,13 @@ export default function Appointments() {
               <AppointmentLookupControlled sid={lookupSid} onSidChange={setLookupSid} />
             </div>
           </div>
+
+          {/* Footer */}
+          <footer className="mt-auto pt-10 pb-4 border-t border-border/40">
+            <p className="text-[10px] uppercase tracking-wider text-muted-foreground/60 text-center font-medium">
+              © 2026 Group 16 Orientation Programe UCSC. All rights reserved.
+            </p>
+          </footer>
         </div>
       </SidebarInset>
     </SidebarProvider>

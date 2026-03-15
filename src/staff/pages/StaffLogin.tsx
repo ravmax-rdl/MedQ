@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate, Link, Navigate } from 'react-router-dom';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -15,8 +15,7 @@ export default function StaffLogin() {
   const navigate = useNavigate();
 
   if (isAuthenticated) {
-    navigate('/staff', { replace: true });
-    return null;
+    return <Navigate to="/staff" replace />;
   }
 
   async function handleSubmit(e: React.FormEvent) {
@@ -87,6 +86,12 @@ export default function StaffLogin() {
             ← Back to student queue
           </Link>
         </p>
+
+        <footer className="mt-8 border-t border-border/40 pt-8">
+          <p className="text-[10px] uppercase tracking-wider text-muted-foreground/60 text-center font-medium">
+            © 2026 Group 16 Orientation Programe UCSC. All rights reserved.
+          </p>
+        </footer>
       </div>
     </div>
   );

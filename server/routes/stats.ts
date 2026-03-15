@@ -57,26 +57,64 @@ router.get('/', requireAuth, (req, res) => {
   const dateParam = req.query.date as string | undefined;
 
   const totalToday = dateParam
-    ? (db.prepare(`SELECT COUNT(*) as count FROM queue WHERE date(joined_at) = ?`).get(dateParam) as { count: number }).count
-    : (db.prepare(`SELECT COUNT(*) as count FROM queue WHERE date(joined_at) = date('now')`).get() as { count: number }).count;
+    ? (
+        db
+          .prepare(`SELECT COUNT(*) as count FROM queue WHERE date(joined_at) = ?`)
+          .get(dateParam) as { count: number }
+      ).count
+    : (
+        db
+          .prepare(`SELECT COUNT(*) as count FROM queue WHERE date(joined_at) = date('now')`)
+          .get() as { count: number }
+      ).count;
 
   // session_log is written on every 'seen' action — the correct source for avg wait.
   const avgWaitRow = dateParam
-    ? (db.prepare(`SELECT AVG(duration_mins) as avg FROM session_log WHERE date(completed_at) = ?`).get(dateParam) as { avg: number | null })
-    : (db.prepare(`SELECT AVG(duration_mins) as avg FROM session_log WHERE completed_at >= date('now')`).get() as { avg: number | null });
+    ? (db
+        .prepare(
+          `SELECT AVG(duration_mins) as avg FROM session_log WHERE date(completed_at) = ? AND duration_mins >= 0`
+        )
+        .get(dateParam) as { avg: number | null })
+    : (db
+        .prepare(
+          `SELECT AVG(duration_mins) as avg FROM session_log WHERE completed_at >= date('now') AND duration_mins >= 0`
+        )
+        .get() as { avg: number | null });
   const avgWait = avgWaitRow.avg;
 
   const currentlyWaiting = dateParam
-    ? (db.prepare(`SELECT COUNT(*) as count FROM queue WHERE status = 'waiting' AND date(joined_at) = ?`).get(dateParam) as { count: number }).count
-    : (db.prepare(`SELECT COUNT(*) as count FROM queue WHERE status = 'waiting'`).get() as { count: number }).count;
+    ? (
+        db
+          .prepare(
+            `SELECT COUNT(*) as count FROM queue WHERE status = 'waiting' AND date(joined_at) = ?`
+          )
+          .get(dateParam) as { count: number }
+      ).count
+    : (
+        db.prepare(`SELECT COUNT(*) as count FROM queue WHERE status = 'waiting'`).get() as {
+          count: number;
+        }
+      ).count;
 
   const appointmentsToday = dateParam
-    ? (db.prepare(`SELECT COUNT(*) as count FROM appointments WHERE date = ? AND status IN ('booked','confirmed')`).get(dateParam) as { count: number }).count
-    : (db.prepare(`SELECT COUNT(*) as count FROM appointments WHERE date = date('now') AND status IN ('booked','confirmed')`).get() as { count: number }).count;
+    ? (
+        db
+          .prepare(
+            `SELECT COUNT(*) as count FROM appointments WHERE date = ? AND status IN ('booked','confirmed')`
+          )
+          .get(dateParam) as { count: number }
+      ).count
+    : (
+        db
+          .prepare(
+            `SELECT COUNT(*) as count FROM appointments WHERE date = date('now') AND status IN ('booked','confirmed')`
+          )
+          .get() as { count: number }
+      ).count;
 
   res.json({
     total_today: totalToday,
-    avg_wait_mins: avgWait ? Math.round(avgWait) : null,
+    avg_wait_mins: avgWait != null ? Math.round(avgWait) : null,
     currently_waiting: currentlyWaiting,
     appointments_today: appointmentsToday,
   });

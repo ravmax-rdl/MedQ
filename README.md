@@ -1,26 +1,67 @@
 ![banner.jpg](/public/banner.jpg)
 
-Students join the clinic queue from their phone or laptop — no more sitting in waiting rooms guessing how long is left. Staff manage the queue from a single panel.
+<p align="center">MedQ is a virtual clinic queue and appointment booking system designed specifically for University Medical Centers. It streamlines patient flow, respects student privacy, and eliminates the guesswork of physical waiting rooms.</p>
 
 <p align="center" ><img height="20px" src="https://ziadoua.github.io/m3-Markdown-Badges/badges/ViteJS/vitejs2.svg"> <img height="20px" src="https://ziadoua.github.io/m3-Markdown-Badges/badges/Express/express2.svg"> <img height="20px" src="https://ziadoua.github.io/m3-Markdown-Badges/badges/SQLite/sqlite2.svg"></p>
 
 ## Features
 
-- **Student view** — join queue, see live position and estimated wait time
-- **Staff view** — call next patient, mark seen, skip, remove no-shows
-- **Live updates** — queue refreshes every 2 seconds, no page reload needed
-- **Wait estimates** — computed from rolling average of completed sessions
+### Student Portal
+
+- **Live Queue Board:** Join the queue by providing ID/reason and immediately see your position on a live-updating board.
+- **Dynamic Wait Estimates:** Displays an estimated wait time actively learned from recent appointment durations.
+- **Appointment Booking:** A simple date and time picker allowing students to reserve available 30-minute time slots in advance.
+- **Smart Alerts:** Prominent live banners alert students the moment their status changes to "Called."
+
+### Staff Dashboard
+
+- **Live Queue Management:** Advance the walk-in queue with single-click actions (_Call_, _Seen_, _Skip_, _Remove_).
+- **Appointment Day-View:** Track, confirm, complete, or cancel pre-booked appointments using a calendar-based interface.
+- **Daily Statistics:** Real-time metrics tracking patients seen, currently waiting count, and average wait times.
+
+<table>
+  <tr>
+    <!-- Column 1 -->
+    <td align="center">
+      <img src="public/screenshots/1.png" width="200" alt="Description 1"/>
+      <br>
+    </td>
+    <!-- Column 2 -->
+    <td align="center">
+      <img src="public/screenshots/1.png" width="200" alt="Description 2"/>
+      <br>
+    </td>
+    <!-- Column 3 -->
+    <td align="center">
+      <img src="public/screenshots/3.png" width="200" alt="Description 3"/>
+      <br>
+    </td>
+  </tr>
+  <tr>
+    <!-- Column 1 -->
+    <td align="center">
+      <img src="public/screenshots/4.png" width="200" alt="Description 1"/>
+      <br>
+    </td>
+    <!-- Column 2 -->
+    <td align="center">
+      <img src="public/screenshots/5.png" width="200" alt="Description 2"/>
+      <br>
+    </td>
+  </tr>
+</table>
 
 ---
 
-## Tech Stack
+## Technical Architecture
 
-| Layer    | Tech                               |
-| -------- | ---------------------------------- |
-| Frontend | Vite + React 19 + TypeScript (SWC) |
-| Styling  | Tailwind CSS + Shadcn/ui           |
-| Backend  | Express.js + TypeScript            |
-| Database | SQLite via better-sqlite3          |
+| Layer    | Technology                         | Description                                            |
+| -------- | ---------------------------------- | ------------------------------------------------------ |
+| Frontend | Vite + React 19 + TypeScript (SWC) | Fast, responsive UI with built-in dark mode support.   |
+| Styling  | Tailwind CSS v4 + Shadcn/ui        | Clinical, minimalist design system.                    |
+| Backend  | Express.js + TypeScript            | Synchronous, lightweight local server.                 |
+| Database | better-sqlite3 (SQLite)            | Raw SQL queries for maximum local performance.         |
+| Auth     | Custom Session Tokens              | Secure SQLite session storage (no JWT/heavy packages). |
 
 ---
 
@@ -109,16 +150,6 @@ medq/
 | PATCH  | `/api/queue/:id` | Update patient status (`called`, `seen`, `skipped`) |
 | DELETE | `/api/queue/:id` | Remove patient from queue                           |
 | GET    | `/api/stats`     | Today's session stats                               |
-
----
-
-## Academic Context
-
-Built as a group project for the University of Colombo School of Computing. The goal was to design and build a small application using AI-assisted coding that solves a realistic student-related problem.
-
-**Problem:** Campus clinic queues at Sri Lankan universities have no visibility system. Students waste time sitting in waiting rooms with no idea how long they'll wait.
-
-**Solution:** A lightweight, fully local virtual queue system that works on any device connected to the campus network.
 
 ---
 

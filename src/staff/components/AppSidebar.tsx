@@ -41,7 +41,7 @@ export function AppSidebar() {
   return (
     <Sidebar collapsible="icon">
       <SidebarHeader className="py-4 px-3">
-        <NavLink to="/staff" className="flex items-center gap-2 px-1 overflow-hidden">
+        <NavLink to="/" className="flex items-center gap-2 px-1 overflow-hidden">
           <div className="flex size-7 items-center justify-center shrink-0">
             <img src={theme === 'dark' ? '/white.svg' : '/black.svg'} alt="MedQ" className="h-6" />
           </div>
@@ -56,7 +56,7 @@ export function AppSidebar() {
 
       <SidebarContent>
         <SidebarGroup>
-          <SidebarGroupLabel>Navigation</SidebarGroupLabel>
+          <SidebarGroupLabel className="text-lg font-semibold">Navigation</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
               {navItems.map(({ label, to, icon: Icon, exact }) => {
@@ -65,7 +65,7 @@ export function AppSidebar() {
                   : location.pathname.startsWith(to);
                 return (
                   <SidebarMenuItem key={to}>
-                    <SidebarMenuButton asChild isActive={isActive} tooltip={label}>
+                    <SidebarMenuButton asChild isActive={isActive} tooltip={label} className="transition-all duration-200 hover:-translate-y-1 hover:shadow-md active:translate-y-0 active:shadow-none">
                       <NavLink to={to} end={exact}>
                         <Icon />
                         <span>{label}</span>
@@ -83,7 +83,7 @@ export function AppSidebar() {
         <SidebarSeparator className="mb-1" />
         <SidebarMenu>
           <SidebarMenuItem>
-            <SidebarMenuButton tooltip="Toggle theme" onClick={handleThemeToggle}>
+            <SidebarMenuButton tooltip="Toggle theme" onClick={handleThemeToggle} className="transition-all duration-200 hover:-translate-y-1 hover:shadow-md active:translate-y-0 active:shadow-none">
               {theme === 'dark' ? <Sun /> : <Moon />}
               <span>{theme === 'dark' ? 'Light mode' : 'Dark mode'}</span>
             </SidebarMenuButton>
@@ -92,7 +92,7 @@ export function AppSidebar() {
             <SidebarMenuButton
               tooltip="Sign out"
               onClick={handleLogout}
-              className="text-muted-foreground hover:text-destructive hover:bg-destructive/10"
+              className="text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-all duration-200 hover:-translate-y-1 hover:shadow-md active:translate-y-0 active:shadow-none"
             >
               <LogOut />
               <span>Sign out</span>
