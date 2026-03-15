@@ -13,13 +13,17 @@
   "license": "ISC",
   "packageManager": "pnpm@10.17.0",
   "pnpm": {
-    "onlyBuiltDependencies": ["better-sqlite3"]
+    "onlyBuiltDependencies": [
+      "better-sqlite3",
+      "esbuild"
+    ]
   },
   "dependencies": {
     "bcryptjs": "^3.0.3",
     "better-sqlite3": "^12.6.2",
     "cors": "^2.8.6",
-    "express": "^5.2.1"
+    "express": "^5.2.1",
+    "package.json": "^2.0.1"
   },
   "devDependencies": {
     "@types/bcryptjs": "^3.0.0",

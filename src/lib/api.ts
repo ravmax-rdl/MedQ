@@ -1,4 +1,11 @@
-const BASE = 'http://localhost:3001/api';
+// Dynamically construct API base URL to support localhost, 127.0.0.1, and remote IPs
+const getBaseUrl = () => {
+  const { protocol, hostname, port } = window.location;
+  // Use the backend port 3001, keeping the same protocol and hostname
+  return `${protocol}//${hostname}:3001/api`;
+};
+
+const BASE = getBaseUrl();
 
 function getToken(): string | null {
   return localStorage.getItem('medq-token');

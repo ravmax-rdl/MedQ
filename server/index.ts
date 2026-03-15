@@ -12,7 +12,21 @@ import statsRouter from './routes/stats';
 const app = express();
 const PORT = 3001;
 
-app.use(cors({ origin: 'http://localhost:5173', credentials: true }));
+// CORS configuration to allow all localhost variants and remote IPs
+app.use(
+  cors({
+    origin: (origin, callback) => {
+      // Allow all origins with localhost, 127.0.0.1, or any IP in dev
+      // For production, restrict this appropriately
+      if (!origin || /^https?:\/\/(localhost|127\.0\.0\.1|(\d{1,3}\.){3}\d{1,3}|[a-zA-Z0-9-]+\.local)(:\d+)?$/.test(origin)) {
+        callback(null, true);
+      } else {
+        callback(null, true); // Allow all in dev mode
+      }
+    },
+    credentials: true,
+  })
+);
 app.use(express.json());
 
 app.use('/api/auth', authRouter);
@@ -22,6 +36,6 @@ app.use('/api/appointments', appointmentsRouter);
 app.use('/api/appointments', manageAppointmentsRouter);
 app.use('/api/stats', statsRouter);
 
-app.listen(PORT, () => {
-  console.log(`MedQ server running at http://localhost:${PORT}`);
+app.listen(PORT, '0.0.0.0', () => {
+  console.log(`MedQ server running at http://0.0.0.0:${PORT}`);
 });
