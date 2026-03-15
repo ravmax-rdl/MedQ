@@ -28,7 +28,7 @@
     </td>
     <!-- Column 2 -->
     <td align="center">
-      <img src="public/screenshots/1.png" width="200" alt="Description 2"/>
+      <img src="public/screenshots/2.png" width="200" alt="Description 2"/>
       <br>
     </td>
     <!-- Column 3 -->
